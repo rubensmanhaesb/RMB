@@ -9,15 +9,14 @@ namespace RMB.Core.Repositories
         IBaseUpdateRepository<TEntity>, 
         IBaseDeleteRepository<TEntity>, 
         IBaseQueryRepository<TEntity>
-        where TEntity : BaseModel
+            where TEntity : BaseModel
     {
 
         private readonly DbContext _dbContext;
 
         public BaseRepository(DbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+             => _dbContext = dbContext;
+
 
         public async Task<TEntity> AddAsync(TEntity entity)
         {
@@ -44,9 +43,13 @@ namespace RMB.Core.Repositories
 
         }
 
-        public async virtual Task<List<TEntity>> GetAll()
+        public async virtual Task<List<TEntity>> GetAllAsync()
             => await _dbContext.Set<TEntity>().ToListAsync();
 
-        public void Dispose()=> _dbContext.Dispose();
+        public void Dispose()
+            => _dbContext.Dispose();
+
+        public virtual async Task<TEntity>? GetByIdAsync(Guid id)
+            => await _dbContext.Set<TEntity>().FindAsync(id);
     }
 }
