@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace RMB.Responses.Middlewares.Controllers
 {
+    /// <summary>
+    /// Middleware that changes the HTTP response status code from 200 (OK) to 204 (No Content)
+    /// if the response body is empty or contains only an empty JSON array ("[]").
+    /// </summary>
     public class ResponseMiddleware
     {
         private readonly RequestDelegate _next;

@@ -3,8 +3,16 @@ using System.Diagnostics;
 
 namespace RMB.Responses.Extensions.Logs
 {
+    /// <summary>
+    /// Provides utilities for managing Windows Event Viewer logs.
+    /// </summary>
     public static class EventLogManager
     {
+        /// <summary>
+        /// Ensures the specified Event Source exists in the Windows Event Viewer.
+        /// </summary>
+        /// <param name="sourceName">The name of the Event Source to be created if it does not exist.</param>
+        /// <param name="logName">The name of the Event Log where events will be recorded.</param>
         public static void EnsureEventSourceExists(string logName)
         {
             if (!EventLog.SourceExists(logName))

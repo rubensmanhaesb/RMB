@@ -3,8 +3,15 @@ using System.Reflection;
 
 namespace RMB.Responses.Extensions.Logs
 {
+    /// <summary>
+    /// Provides utility methods for retrieving the name of the caller method.
+    /// </summary>
     public static class MethodHelper
     {
+        /// <summary>
+        /// Gets the name of the calling method, excluding methods from this helper class.
+        /// </summary>
+        /// <returns>A string containing the full name of the calling method.</returns>
         public static string GetCurrentMethodName()
         {
             var stackTrace = new StackTrace();
