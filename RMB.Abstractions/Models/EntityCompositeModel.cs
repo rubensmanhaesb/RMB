@@ -1,11 +1,11 @@
 ﻿
 namespace RMB.Abstractions.Models
 {
-    public abstract class EntityCompositeModel<TKey> : BaseModel, IBaseModel<TKey>
+    public abstract class EntityCompositeModel<Tkey> : BaseModel, IBaseModel<Tkey>
     {
-        public virtual TKey Key { get; set; }
+        public virtual Tkey Key { get; set; }
 
-        public TKey GetKey()
+        public Tkey GetKey()
         {
             return this.Key;
         }
