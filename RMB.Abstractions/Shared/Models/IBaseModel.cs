@@ -1,4 +1,4 @@
-﻿namespace RMB.Abstractions.Models
+﻿namespace RMB.Abstractions.Shared.Models
 {
     /// <summary>
     /// Defines a base contract for models with a primary key.

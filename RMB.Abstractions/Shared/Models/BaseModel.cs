@@ -1,4 +1,4 @@
-﻿namespace RMB.Abstractions.Models
+﻿namespace RMB.Abstractions.Shared.Models
 {
     /// <summary>
     /// Serves as the base class for all entity models.

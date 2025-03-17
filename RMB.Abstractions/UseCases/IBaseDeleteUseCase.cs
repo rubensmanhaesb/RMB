@@ -1,7 +1,6 @@
-﻿using RMB.Abstractions.Core;
-using RMB.Abstractions.Models;
+﻿
 
-namespace RMB.Abstractions.Applications
+namespace RMB.Abstractions.UseCases
 {
     /// <summary>
     /// Defines the contract for deleting entities in the application layer.
@@ -10,7 +9,7 @@ namespace RMB.Abstractions.Applications
     /// </summary>
     /// <typeparam name="TDto">The DTO type containing the data for entity deletion.</typeparam>
     /// <typeparam name="TDtoResult">The DTO type representing the result of the operation.</typeparam>
-    public interface IBaseDeleteApplication<TDto, TDtoResult>
+    public interface IBaseDeleteUseCase<TDto, TDtoResult>
     {
         /// <summary>
         /// Deletes an entity asynchronously using a Data Transfer Object (DTO).

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RMB.Abstractions.Models;
 using RMB.Abstractions.Repositories;
+using RMB.Abstractions.Shared.Models;
 
 namespace RMB.Core.Repositories
 {

@@ -1,4 +1,4 @@
-﻿namespace RMB.Abstractions.Models
+﻿namespace RMB.Abstractions.Shared.Models
 {
     /// <summary>
     /// Represents a base entity model with a composite key.
@@ -6,7 +6,7 @@
     /// providing a common structure for entity models that use a composite key.
     /// </summary>
     /// <typeparam name="TKey">The type of the composite key.</typeparam>
-    public abstract class EntityCompositeModel<TKey> : BaseModel, IBaseModel<TKey>
+    public abstract class CompositeModel<TKey> : BaseModel, IBaseModel<TKey>
     {
         /// <summary>
         /// Gets or sets the composite key for the entity.
@@ -19,7 +19,7 @@
         /// <returns>The composite key of the entity.</returns>
         public TKey GetKey()
         {
-            return this.Key;
+            return Key;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RMB.Abstractions.Domains;
-using RMB.Abstractions.Models;
+using RMB.Abstractions.Shared.Models;
 using RMB.Core.Repositories;
 
 namespace RMB.Core.Domains

@@ -1,7 +1,5 @@
-﻿using RMB.Abstractions.Core;
-using RMB.Abstractions.Models;
-
-namespace RMB.Abstractions.Applications
+﻿
+namespace RMB.Abstractions.UseCases
 {
     /// <summary>
     /// Defines the contract for updating entities in the application layer.
@@ -10,7 +8,7 @@ namespace RMB.Abstractions.Applications
     /// </summary>
     /// <typeparam name="TDto">The DTO type containing the data for updating an entity.</typeparam>
     /// <typeparam name="TDtoResult">The DTO type representing the result of the update operation.</typeparam>
-    public interface IBaseUpdateApplication<TDto, TDtoResult>
+    public interface IBaseUpdateUseCase<TDto, TDtoResult>
     {
         /// <summary>
         /// Updates an existing entity asynchronously using a Data Transfer Object (DTO).

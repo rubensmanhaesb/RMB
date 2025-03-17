@@ -1,5 +1,5 @@
-﻿using RMB.Abstractions.Core;
-using RMB.Abstractions.Models;
+﻿using RMB.Abstractions.Shared.Contracts;
+using RMB.Abstractions.Shared.Models;
 
 namespace RMB.Abstractions.Domains
 {

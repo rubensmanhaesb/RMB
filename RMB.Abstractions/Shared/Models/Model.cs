@@ -1,4 +1,4 @@
-﻿namespace RMB.Abstractions.Models
+﻿namespace RMB.Abstractions.Shared.Models
 {
     /// <summary>
     /// Represents a base entity model with a unique identifier.
@@ -6,7 +6,7 @@
     /// providing a common structure for entity models with a primary key.
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key.</typeparam>
-    public abstract class EntityModel<TKey> : BaseModel, IBaseModel<TKey>
+    public abstract class Model<TKey> : BaseModel, IBaseModel<TKey>
     {
         /// <summary>
         /// Gets or sets the unique identifier for the entity.
@@ -19,7 +19,7 @@
         /// <returns>The primary key of the entity.</returns>
         public TKey GetKey()
         {
-            return this.Id;
+            return Id;
         }
     }
 }

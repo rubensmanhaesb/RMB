@@ -1,7 +1,6 @@
-﻿using RMB.Abstractions.Entities;
-using RMB.Abstractions.Models;
+﻿using RMB.Abstractions.Shared.Models;
 
-namespace RMB.Abstractions.Core
+namespace RMB.Abstractions.Shared.Contracts
 {
     /// <summary>
     /// Defines the contract for querying entities in the system.

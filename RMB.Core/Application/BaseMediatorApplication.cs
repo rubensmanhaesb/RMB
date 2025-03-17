@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using RMB.Abstractions.Applications;
-using RMB.Abstractions.Models;
+using RMB.Abstractions.UseCases;
 using RMB.Core.Domains;
+using RMB.Abstractions.Shared.Models;
 
 namespace RMB.Core.Application
 {
@@ -10,9 +10,9 @@ namespace RMB.Core.Application
     /// Base class for Mediator-based application services with CRUD operations.
     /// </summary>
     public abstract class BaseMediatorApplication<TDtoCreate, TDtoUpdate, TDtoDelete, TDtoResult, TEntity> :
-        IBaseAddApplication<TDtoCreate, TDtoResult>,
-        IBaseUpdateApplication<TDtoUpdate, TDtoResult>,
-        IBaseDeleteApplication<TDtoDelete, TDtoResult>
+        IBaseAddUseCase<TDtoCreate, TDtoResult>,
+        IBaseUpdateUseCase<TDtoUpdate, TDtoResult>,
+        IBaseDeleteUseCase<TDtoDelete, TDtoResult>
         where TEntity : BaseModel
     {
         private readonly BaseDomain<TEntity> _baseDomain;
