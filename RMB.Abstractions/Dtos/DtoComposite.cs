@@ -1,13 +1,14 @@
 ﻿using RMB.Abstractions.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RMB.Abstractions.Dtos
 {
-    public abstract class DtoComposite<Tkey> : EntityModel<Tkey>
+    /// <summary>
+    /// Represents a Data Transfer Object (DTO) with a composite key.
+    /// This abstract class extends <see cref="EntityModel{TKey}"/> to provide a 
+    /// base structure for DTOs that use composite keys.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the composite key.</typeparam>
+    public abstract class DtoComposite<TKey> : EntityModel<TKey>
     {
     }
 }

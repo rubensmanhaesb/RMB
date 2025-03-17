@@ -6,6 +6,9 @@ using RMB.Core.Domains;
 
 namespace RMB.Core.Application
 {
+    /// <summary>
+    /// Base class for Mediator-based application services with CRUD operations.
+    /// </summary>
     public abstract class BaseMediatorApplication<TDtoCreate, TDtoUpdate, TDtoDelete, TDtoResult, TEntity> :
         IBaseAddApplication<TDtoCreate, TDtoResult>,
         IBaseUpdateApplication<TDtoUpdate, TDtoResult>,
@@ -33,7 +36,7 @@ namespace RMB.Core.Application
 
         public virtual async Task<List<TDtoResult>?> GetAllAsync()
         {
-            var lista = _baseDomain.GetAllAsync().Result;
+            var lista = await _baseDomain.GetAllAsync();
             var result = _mapper.Map<List<TDtoResult>>(lista);
 
             return result;

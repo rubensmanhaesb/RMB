@@ -1,11 +1,23 @@
-﻿
-namespace RMB.Abstractions.Models
+﻿namespace RMB.Abstractions.Models
 {
-    public abstract class EntityCompositeModel<Tkey> : BaseModel, IBaseModel<Tkey>
+    /// <summary>
+    /// Represents a base entity model with a composite key.
+    /// This abstract class extends <see cref="BaseModel"/> and implements <see cref="IBaseModel{TKey}"/>,
+    /// providing a common structure for entity models that use a composite key.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the composite key.</typeparam>
+    public abstract class EntityCompositeModel<TKey> : BaseModel, IBaseModel<TKey>
     {
-        public virtual Tkey Key { get; set; }
+        /// <summary>
+        /// Gets or sets the composite key for the entity.
+        /// </summary>
+        public virtual TKey Key { get; set; }
 
-        public Tkey GetKey()
+        /// <summary>
+        /// Retrieves the composite key of the entity.
+        /// </summary>
+        /// <returns>The composite key of the entity.</returns>
+        public TKey GetKey()
         {
             return this.Key;
         }

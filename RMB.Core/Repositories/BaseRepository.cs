@@ -4,6 +4,12 @@ using RMB.Abstractions.Repositories;
 
 namespace RMB.Core.Repositories
 {
+    /// <summary>
+    /// Provides a generic repository implementation for CRUD operations using Entity Framework Core.
+    /// This repository abstracts common database operations such as adding, updating, deleting, 
+    /// and retrieving entities, ensuring consistency and reusability across different domains.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type that inherits from BaseModel.</typeparam>
     public abstract class BaseRepository<TEntity> 
         : IBaseAddRepository<TEntity>, 
         IBaseUpdateRepository<TEntity>, 

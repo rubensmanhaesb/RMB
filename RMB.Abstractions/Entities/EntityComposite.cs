@@ -2,7 +2,13 @@
 
 namespace RMB.Abstractions.Entities
 {
-    public abstract class EntityComposite<Tkey> : EntityModel<Tkey>
+    /// <summary>
+    /// Represents an entity that uses a composite key.
+    /// This abstract class extends <see cref="EntityModel{TKey}"/>, allowing entities 
+    /// with composite keys to inherit common behaviors.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the composite key.</typeparam>
+    public abstract class EntityComposite<TKey> : EntityModel<TKey>
     {
     }
 }

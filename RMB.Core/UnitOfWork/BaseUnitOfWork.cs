@@ -4,6 +4,10 @@ using RMB.Abstractions.Repositories;
 
 namespace RMB.Core.UnitOfWork
 {
+    /// <summary>
+    /// Base implementation of the Unit of Work pattern, managing database transactions and ensuring atomic operations.
+    /// This class provides methods to begin, commit, and rollback transactions, as well as save changes asynchronously.
+    /// </summary>
     public abstract class BaseUnitOfWork : IBaseUnitOfWork
     {
         private readonly DbContext _dbContext;

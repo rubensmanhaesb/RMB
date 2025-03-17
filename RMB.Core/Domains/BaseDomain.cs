@@ -5,6 +5,10 @@ using RMB.Core.Repositories;
 
 namespace RMB.Core.Domains
 {
+    /// <summary>
+    /// Base class for domain logic, providing CRUD operations using a repository pattern.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type that inherits from BaseModel.</typeparam>
     public abstract class BaseDomain<TEntity> :
         IBaseAddDomain<TEntity>,
         IBaseUpdateDomain<TEntity>,
@@ -16,7 +20,6 @@ namespace RMB.Core.Domains
 
         protected BaseDomain(BaseRepository<TEntity> repository)
             =>_baseRepository = repository;
-        
 
         public async virtual Task<TEntity> AddAsync(TEntity entity)
             => await _baseRepository.AddAsync(entity);
