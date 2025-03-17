@@ -4,7 +4,7 @@ using RMB.Abstractions.Repositories;
 
 namespace RMB.Core.UnitOfWork
 {
-    public class BaseUnitOfWork : IBaseUnitOfWork
+    public abstract class BaseUnitOfWork : IBaseUnitOfWork
     {
         private readonly DbContext _dbContext;
         private  IDbContextTransaction _transaction;

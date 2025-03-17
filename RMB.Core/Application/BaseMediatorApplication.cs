@@ -1,0 +1,51 @@
+﻿using AutoMapper;
+using MediatR;
+using RMB.Abstractions.Applications;
+using RMB.Abstractions.Models;
+using RMB.Core.Domains;
+
+namespace RMB.Core.Application
+{
+    public abstract class BaseMediatorApplication<TDtoCreate, TDtoUpdate, TDtoDelete, TDtoResult, TEntity> :
+        IBaseAddApplication<TDtoCreate, TDtoResult>,
+        IBaseUpdateApplication<TDtoUpdate, TDtoResult>,
+        IBaseDeleteApplication<TDtoDelete, TDtoResult>
+        where TEntity : BaseModel
+    {
+        private readonly BaseDomain<TEntity> _baseDomain;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+
+        protected BaseMediatorApplication(BaseDomain<TEntity> baseDomain, IMediator mediator, IMapper mapper)
+        {
+            _baseDomain = baseDomain;
+            _mediator = mediator;
+            _mapper = mapper;
+        }
+
+        public async Task<TDtoResult> AddAsync(TDtoCreate dto)
+            => (TDtoResult) await _mediator.Send(dto);
+
+        public async Task<TDtoResult> DeleteAsync(TDtoDelete dto)
+            => (TDtoResult) await _mediator.Send(dto);
+        public async Task<TDtoResult> UpdateAsync(TDtoUpdate dto)
+            => (TDtoResult) await _mediator.Send(dto);
+
+        public virtual async Task<List<TDtoResult>?> GetAllAsync()
+        {
+            var lista = _baseDomain.GetAllAsync().Result;
+            var result = _mapper.Map<List<TDtoResult>>(lista);
+
+            return result;
+        }
+
+        public virtual async Task<TDtoResult?> GetByIdAsync(Guid id)
+        {
+            var pessoaJuridicaDto = await _baseDomain.GetByIdAsync(id);
+            var result = _mapper.Map<TDtoResult>(pessoaJuridicaDto);
+
+            return result;
+        }
+
+    }
+}

@@ -44,7 +44,10 @@ namespace RMB.Core.Repositories
         }
 
         public async virtual Task<List<TEntity>> GetAllAsync()
-            => await _dbContext.Set<TEntity>().ToListAsync();
+        {
+            var result = await _dbContext.Set<TEntity>().ToListAsync();
+            return result;
+        } 
 
         public void Dispose()
             => _dbContext.Dispose();
