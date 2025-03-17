@@ -15,4 +15,9 @@
     <PackageReference Include="Serilog.Sinks.EventLog" Version="4.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Logs\Middlewares\" />
+  </ItemGroup>
+
 </Project>

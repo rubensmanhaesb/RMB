@@ -2,6 +2,7 @@
 using Serilog.Events;
 using Serilog;
 using System.Reflection;
+using Serilog.Context;
 
 
 namespace RMB.Responses.Logs.Extensions.Logs
@@ -9,7 +10,7 @@ namespace RMB.Responses.Logs.Extensions.Logs
     /// <summary>
     /// Provides methods to configure logging for the Windows Event Viewer.
     /// </summary>
-    public static class LoggingExtensions
+    public static class LoggingExtensions 
     {
         /// <summary>
         /// Configures logging to write logs to the Windows Event Viewer.
@@ -26,6 +27,8 @@ namespace RMB.Responses.Logs.Extensions.Logs
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("System", LogEventLevel.Warning)
                 .MinimumLevel.Information()
+                .Enrich.FromLogContext() // Permite que o contexto seja herdado
+                .WriteTo.Console()
                 .WriteTo.EventLog(
                     source: applicationName,
                     logName: logName,
@@ -33,11 +36,11 @@ namespace RMB.Responses.Logs.Extensions.Logs
                     manageEventSource: false
                 )
                 .CreateLogger();
-
+            
             // se retiraro comentário da linha de baixo os logs do param de aparecer no console
             //loggingBuilder.ClearProviders();
             loggingBuilder.AddSerilog(Log.Logger, dispose: true);
-
+            
             Log.Information($"Logging configurado para Event Viewer! ");// [{MethodHelper.GetCurrentMethodName()}]");
         }
 
