@@ -4,7 +4,7 @@ using RMB.Abstractions.UseCases;
 using RMB.Core.Domains;
 using RMB.Abstractions.Shared.Models;
 
-namespace RMB.Core.Application
+namespace RMB.Core.UseCases
 {
     /// <summary>
     /// Base class for Mediator-based application services with CRUD operations.
