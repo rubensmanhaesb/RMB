@@ -7,14 +7,14 @@ using System.Reflection;
 namespace RMB.Core.Logs.Extensions
 {
     /// <summary>
-    /// Provides methods to configure logging for the Windows Event Viewer.
-    /// This extension ensures logs are structured and contain Correlation IDs for traceability.
+    /// Provides extension methods for configuring Serilog to write logs to the Windows Event Viewer.
+    /// This extension ensures that logs are structured, enriched with Correlation IDs, and follow a consistent format.
     /// </summary>
     public static class LoggingExtensions 
     {
         /// <summary>
         /// Configures Serilog to write logs to the Windows Event Viewer.
-        /// Ensures that logs contain Correlation IDs and structured messages.
+        /// This method ensures structured logging with Correlation IDs for better traceability.
         /// </summary>
         /// <param name="loggingBuilder">The logging builder used to register logging providers.</param>
         /// <param name="logName">The name of the event log where logs will be written.</param>
@@ -42,12 +42,11 @@ namespace RMB.Core.Logs.Extensions
             //loggingBuilder.ClearProviders();
             loggingBuilder.AddSerilog(Log.Logger, dispose: true);
             
-            Log.Information($"Logging configurado para Event Viewer! ");
         }
 
         /// <summary>
-        /// Retrieves the name of the main application assembly.
-        /// Used to determine the default event log source name.
+        /// Retrieves the name of the main application assembly dynamically.
+        /// Used to determine the default event log source name when the entry assembly is unavailable.
         /// </summary>
         /// <returns>The name of the main assembly, or null if it cannot be determined.</returns>
         private static string? GetMainAssemblyName()

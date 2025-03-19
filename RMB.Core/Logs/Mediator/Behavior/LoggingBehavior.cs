@@ -5,7 +5,7 @@ using Serilog.Context;
 
 using RMB.Abstractions.UseCases.Logs;
 
-namespace RMB.Core.Logs.Behavior
+namespace RMB.Core.Logs.Mediator.Behavior
 {
     /// <summary>
     /// MediatR pipeline behavior that logs request execution details and ensures Correlation ID consistency.
