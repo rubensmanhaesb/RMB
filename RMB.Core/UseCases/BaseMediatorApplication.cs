@@ -2,7 +2,7 @@
 using MediatR;
 using RMB.Abstractions.UseCases;
 using RMB.Core.Domains;
-using RMB.Abstractions.Shared.Models;
+using RMB.Abstractions.Entities;
 
 namespace RMB.Core.UseCases
 {
@@ -13,7 +13,7 @@ namespace RMB.Core.UseCases
         IBaseAddUseCase<TDtoCreate, TDtoResult>,
         IBaseUpdateUseCase<TDtoUpdate, TDtoResult>,
         IBaseDeleteUseCase<TDtoDelete, TDtoResult>
-        where TEntity : BaseModel
+        where TEntity : BaseEntity
     {
         private readonly BaseDomain<TEntity> _baseDomain;
         private readonly IMediator _mediator;

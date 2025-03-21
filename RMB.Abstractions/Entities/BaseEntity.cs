@@ -1,11 +1,11 @@
-﻿namespace RMB.Abstractions.Shared.Models
+﻿namespace RMB.Abstractions.Entities
 {
     /// <summary>
     /// Serves as the base class for all entity models.
     /// This abstract class provides a foundation for entity models in the system,
     /// allowing for common behaviors and properties to be shared across different entities.
     /// </summary>
-    public abstract class BaseModel
+    public abstract class BaseEntity
     {
     }
 }

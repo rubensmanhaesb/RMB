@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RMB.Abstractions.Domains;
-using RMB.Abstractions.Shared.Models;
+using RMB.Abstractions.Entities;
 using RMB.Core.Repositories;
 using System.Linq.Expressions;
 
@@ -15,7 +15,7 @@ namespace RMB.Core.Domains
         IBaseUpdateDomain<TEntity>,
         IBaseDeleteDomain<TEntity>,
         IBaseQueryDomain<TEntity> 
-        where TEntity : BaseModel
+        where TEntity : BaseEntity
     {
         private readonly BaseRepository<TEntity> _baseRepository;
 

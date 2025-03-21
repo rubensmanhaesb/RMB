@@ -1,4 +1,4 @@
-﻿using RMB.Abstractions.Shared.Models;
+﻿using RMB.Abstractions.Entities;
 using System.Linq.Expressions;
 
 namespace RMB.Abstractions.Shared.Contracts
@@ -8,9 +8,9 @@ namespace RMB.Abstractions.Shared.Contracts
     /// This interface ensures that implementing classes provide asynchronous methods 
     /// for retrieving all entities or a specific entity by its identifier.
     /// </summary>
-    /// <typeparam name="TEntity">The entity type that inherits from <see cref="BaseModel"/>.</typeparam>
+    /// <typeparam name="TEntity">The entity type that inherits from <see cref="BaseEntity"/>.</typeparam>
     public interface IBaseQuery<TEntity> : IDisposable
-        where TEntity : BaseModel
+        where TEntity : BaseEntity
     {
         /// <summary>
         /// Retrieves all entities asynchronously.

@@ -1,5 +1,5 @@
-﻿using RMB.Abstractions.Shared.Contracts;
-using RMB.Abstractions.Shared.Models;
+﻿using RMB.Abstractions.Entities;
+using RMB.Abstractions.Shared.Contracts;
 
 namespace RMB.Abstractions.Repositories
 {
@@ -10,7 +10,7 @@ namespace RMB.Abstractions.Repositories
     /// </summary>
     /// <typeparam name="TEntity">The entity type that inherits from BaseModel.</typeparam>
 
-    public interface IBaseUpdateRepository<TEntity> : IBaseUpdate<TEntity> where TEntity : BaseModel
+    public interface IBaseUpdateRepository<TEntity> : IBaseUpdate<TEntity> where TEntity : BaseEntity
     {
     }
 }

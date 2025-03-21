@@ -1,4 +1,4 @@
-﻿namespace RMB.Abstractions.Shared.Models
+﻿namespace RMB.Abstractions.Entities
 {
     /// <summary>
     /// Defines a base contract for models with a primary key.
@@ -6,7 +6,7 @@
     /// to retrieve their unique key.
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key.</typeparam>
-    internal interface IBaseModel<TKey>
+    internal interface IBaseEntity<TKey>
     {
         /// <summary>
         /// Retrieves the unique key of the entity.

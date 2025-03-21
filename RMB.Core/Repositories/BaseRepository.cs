@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RMB.Abstractions.Entities;
 using RMB.Abstractions.Repositories;
-using RMB.Abstractions.Shared.Models;
 using System.Linq.Expressions;
 
 namespace RMB.Core.Repositories
@@ -16,7 +16,7 @@ namespace RMB.Core.Repositories
         IBaseUpdateRepository<TEntity>, 
         IBaseDeleteRepository<TEntity>, 
         IBaseQueryRepository<TEntity>
-            where TEntity : BaseModel
+            where TEntity : BaseEntity
     {
 
         private readonly DbContext _dbContext;
