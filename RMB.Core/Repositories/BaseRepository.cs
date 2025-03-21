@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RMB.Abstractions.Repositories;
 using RMB.Abstractions.Shared.Models;
+using System.Linq.Expressions;
 
 namespace RMB.Core.Repositories
 {
@@ -49,16 +50,38 @@ namespace RMB.Core.Repositories
 
         }
 
+        public async Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
+            => await _dbContext.Set<TEntity>()
+                .AsNoTracking()
+                .Where(predicate)
+                .ToListAsync();
+
+        public virtual async Task<TEntity>? GetByIdAsync(Guid id)
+            => await _dbContext.Set<TEntity>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+
+
         public async virtual Task<List<TEntity>> GetAllAsync()
-        {
-            var result = await _dbContext.Set<TEntity>().ToListAsync();
-            return result;
-        } 
+            => await _dbContext.Set<TEntity>()
+                .AsNoTracking()
+                .ToListAsync();
+
+        public async virtual Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+            => await _dbContext.Set<TEntity>()
+                .AsNoTracking() 
+                .Where(predicate)
+                .ToListAsync();            
+
+
+        public async virtual Task<TEntity?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate)
+            =>await _dbContext.Set<TEntity>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(predicate);
 
         public void Dispose()
             => _dbContext.Dispose();
 
-        public virtual async Task<TEntity>? GetByIdAsync(Guid id)
-            => await _dbContext.Set<TEntity>().FindAsync(id);
+        
     }
 }

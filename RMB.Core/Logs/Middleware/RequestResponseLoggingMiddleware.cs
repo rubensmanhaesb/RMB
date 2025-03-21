@@ -37,6 +37,7 @@ namespace RMB.Core.Logs.Middleware
         /// <param name="context">The current HTTP request context.</param>
         public async Task Invoke(HttpContext context)
         {
+
             if (!_loggingSettings.CurrentValue.LogRequestsAndResponses)
             {
                 await _next(context);
@@ -60,7 +61,7 @@ namespace RMB.Core.Logs.Middleware
                 var responseBodyText = await new StreamReader(responseBody).ReadToEndAsync();
                 responseBody.Seek(0, SeekOrigin.Begin);
 
-                Log.Information("Response: {StatusCode} | Body: {Body}",
+                Log.Information("Response: {StatusCode} | Body: {Body} ",
                     context.Response.StatusCode, responseBodyText);
 
                 // Restaurar o Response.Body original antes de passar para o próximo middleware

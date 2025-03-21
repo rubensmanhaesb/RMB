@@ -2,6 +2,7 @@
 using RMB.Abstractions.Domains;
 using RMB.Abstractions.Shared.Models;
 using RMB.Core.Repositories;
+using System.Linq.Expressions;
 
 namespace RMB.Core.Domains
 {
@@ -35,10 +36,15 @@ namespace RMB.Core.Domains
 
         public async virtual Task<List<TEntity>>? GetAllAsync()
             => await _baseRepository.GetAllAsync();
-        
+
+        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+            => await _baseRepository.GetAllAsync(predicate);
 
         public async Task<TEntity>? GetByIdAsync(Guid id)
             => await _baseRepository.GetByIdAsync(id);
+
+        public Task<TEntity?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate)
+            => _baseRepository.GetOneByAsync(predicate);
 
         public async virtual Task<TEntity> UpdateAsync(TEntity entity)
             => await _baseRepository.UpdateAsync(entity);

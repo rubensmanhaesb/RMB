@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace RMB.Core.Notifications
+namespace RMB.Abstractions.Notifications
 {
     /// <summary>
     /// Represents the possible actions for notifications related to entity state changes.

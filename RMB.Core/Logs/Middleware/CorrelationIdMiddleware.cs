@@ -44,7 +44,7 @@ namespace RMB.Core.Logs.Middleware
             using (LogContext.PushProperty("CorrelationId", correlationId))
             try
             {
-                Log.Information("Guid gerado no Middleware!");
+                Log.Information("Guid gerado no CorrelationIdMiddleware!");
                 await _next(context);
             }
             catch (Exception ex)

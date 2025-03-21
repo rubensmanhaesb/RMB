@@ -1,4 +1,5 @@
 ﻿using RMB.Abstractions.Shared.Models;
+using System.Linq.Expressions;
 
 namespace RMB.Abstractions.Shared.Contracts
 {
@@ -23,5 +24,9 @@ namespace RMB.Abstractions.Shared.Contracts
         /// <param name="id">The unique identifier of the entity.</param>
         /// <returns>The entity with the specified identifier, or null if not found.</returns>
         Task<TEntity?> GetByIdAsync(Guid id);
+
+        Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
+
+        Task<TEntity?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

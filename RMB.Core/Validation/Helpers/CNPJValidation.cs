@@ -1,22 +1,20 @@
 ﻿using System.Text.RegularExpressions;
 
 
-namespace RMB.Core.Validation
+namespace RMB.Core.Validation.Helpers
 {
     public static class CNPJValidation
     {
-        public static bool ValidarCNPJ(string? cnpj)
+        public static bool Validation(string? cnpj)
         {
             if (string.IsNullOrWhiteSpace(cnpj))
                 return false;
 
-            // Remove caracteres não numéricos
             cnpj = Regex.Replace(cnpj, "[^0-9]", "");
 
             if (cnpj.Length != 14)
                 return false;
 
-            // Verifica se todos os dígitos são iguais (exemplo: 11111111111111)
             if (new string(cnpj[0], cnpj.Length) == cnpj)
                 return false;
 
@@ -30,7 +28,7 @@ namespace RMB.Core.Validation
                 soma += int.Parse(tempCnpj[i].ToString()) * multiplicador1[i];
 
             int resto = soma % 11;
-            int digito1 = (resto < 2) ? 0 : 11 - resto;
+            int digito1 = resto < 2 ? 0 : 11 - resto;
 
             tempCnpj += digito1;
             soma = 0;
@@ -39,7 +37,7 @@ namespace RMB.Core.Validation
                 soma += int.Parse(tempCnpj[i].ToString()) * multiplicador2[i];
 
             resto = soma % 11;
-            int digito2 = (resto < 2) ? 0 : 11 - resto;
+            int digito2 = resto < 2 ? 0 : 11 - resto;
 
             return cnpj.EndsWith(digito1.ToString() + digito2.ToString());
         }

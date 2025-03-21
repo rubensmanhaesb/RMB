@@ -2,6 +2,7 @@
 using Serilog.Events;
 using Serilog;
 using System.Reflection;
+using RMB.Core.Logs.Services;
 
 
 namespace RMB.Core.Logs.Extensions
@@ -29,12 +30,13 @@ namespace RMB.Core.Logs.Extensions
                 .MinimumLevel.Override("System", LogEventLevel.Warning)
                 .MinimumLevel.Information()
                 .Enrich.FromLogContext() // Permite que o contexto seja herdado
+                .Enrich.With(new CallerEnricher(new StackTraceCallerInfoProvider())) // Adiciona o nome da classe e o método
                 .WriteTo.EventLog(
                     source: applicationName,
                     logName: logName,
                     restrictedToMinimumLevel: LogEventLevel.Information,
                     manageEventSource: false,
-                    outputTemplate: "CorrelationId: {CorrelationId} - {Message}{NewLine}{Exception}"
+                    outputTemplate: "CorrelationId: {CorrelationId} - {Message}{NewLine}{Exception}{NewLine}Class: {CallerClassName}{NewLine}Method: {CallerMethodName}"
                 )
                 .CreateLogger();
             
