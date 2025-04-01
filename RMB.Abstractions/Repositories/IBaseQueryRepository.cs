@@ -2,6 +2,7 @@
 using RMB.Abstractions.Shared.Contracts;
 
 namespace RMB.Abstractions.Repositories
+
 {
     /// <summary>
     /// Defines the contract for querying entities in a repository.

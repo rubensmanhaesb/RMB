@@ -4,29 +4,38 @@ using System.Linq.Expressions;
 namespace RMB.Abstractions.Shared.Contracts
 {
     /// <summary>
-    /// Defines the contract for querying entities in the system.
-    /// This interface ensures that implementing classes provide asynchronous methods 
-    /// for retrieving all entities or a specific entity by its identifier.
+    /// Defines a base contract for querying entities from a data source.
+    /// Provides methods for retrieving all entities, filtering by predicate, and fetching by ID.
     /// </summary>
-    /// <typeparam name="TEntity">The entity type that inherits from <see cref="BaseEntity"/>.</typeparam>
+    /// <typeparam name="TEntity">The type of the entity that extends BaseEntity.</typeparam>
     public interface IBaseQuery<TEntity> : IDisposable
         where TEntity : BaseEntity
     {
         /// <summary>
-        /// Retrieves all entities asynchronously.
+        /// Asynchronously retrieves all entities from the data source.
         /// </summary>
         /// <returns>A list of all entities.</returns>
         Task<List<TEntity>> GetAllAsync();
 
         /// <summary>
-        /// Retrieves an entity by its unique identifier asynchronously.
+        /// Asynchronously retrieves an entity by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the entity.</param>
-        /// <returns>The entity with the specified identifier, or null if not found.</returns>
+        /// <returns>The entity if found; otherwise, null.</returns>
         Task<TEntity?> GetByIdAsync(Guid id);
 
+        /// <summary>
+        /// Asynchronously retrieves all entities that match the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The filter expression to apply.</param>
+        /// <returns>A list of entities that match the predicate.</returns>
         Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
 
+        /// <summary>
+        /// Asynchronously retrieves the first entity that matches the specified predicate.
+        /// </summary>
+        /// <param name="predicate">The filter expression to apply.</param>
+        /// <returns>The first matching entity, or null if no match is found.</returns>
         Task<TEntity?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

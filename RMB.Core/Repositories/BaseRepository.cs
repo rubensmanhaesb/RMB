@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RMB.Abstractions.Entities;
 using RMB.Abstractions.Repositories;
+using RMB.Abstractions.Repositories.Paginations;
+using RMB.Abstractions.Shared.Contracts.Requests;
+using RMB.Abstractions.Shared.Contracts.Responses;
+using RMB.Core.Extensions;
 using System.Linq.Expressions;
 
 namespace RMB.Core.Repositories
@@ -15,8 +19,9 @@ namespace RMB.Core.Repositories
         : IBaseAddRepository<TEntity>, 
         IBaseUpdateRepository<TEntity>, 
         IBaseDeleteRepository<TEntity>, 
-        IBaseQueryRepository<TEntity>
-            where TEntity : BaseEntity
+        IBaseQueryRepository<TEntity>,
+        IBasePaginatedQueryRepository<TEntity>
+        where TEntity : BaseEntity
     {
 
         private readonly DbContext _dbContext;
@@ -82,6 +87,36 @@ namespace RMB.Core.Repositories
         public void Dispose()
             => _dbContext.Dispose();
 
-        
+
+        public async Task<PaginatedResult<TProjection>> GetPaginatedAsync<TProjection>(
+            Expression<Func<TEntity, bool>>? predicate,
+            PaginationRequest paginationRequest,
+            CancellationToken cancellationToken,
+            Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            Expression<Func<TEntity, object>>? groupBy = null,
+            Expression<Func<IGrouping<object, TEntity>, TProjection>>? selectGroupBy = null,
+            Expression<Func<TEntity, TProjection>>? select = null)
+        {
+            var options = (PaginatedQueryBuilder<TEntity, TProjection>)
+                PaginatedQueryBuilder<TEntity, TProjection>
+                    .Create()
+                    .WithPredicate(predicate!)
+                    .WithInclude(include!)
+                    .WithOrderBy(orderBy!)
+                    .WithGroupBy(groupBy!)
+                    .WithSelectGroupBy(selectGroupBy!)
+                    .WithSelect(select!);
+
+            return await _dbContext.Set<TEntity>()
+                .AsNoTracking()
+                .ToPaginatedResultAsync(
+                    paginationRequest,
+                    options,              
+                    cancellationToken);
+
+
+        }
+
     }
 }
