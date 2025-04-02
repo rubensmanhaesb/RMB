@@ -45,36 +45,36 @@ namespace RMB.Core.UseCases
         /// <summary>
         /// Sends the create command through the mediator and returns the result DTO.
         /// </summary>
-        public async Task<TDtoResult> AddAsync(TDtoCreate dto)
-            => (TDtoResult)await _mediator.Send(dto);
+        public async Task<TDtoResult> AddAsync(TDtoCreate dto, CancellationToken cancellationToken)
+            => (TDtoResult)await _mediator.Send(dto, cancellationToken);
 
         /// <summary>
         /// Sends the delete command through the mediator and returns the result DTO.
         /// </summary>
-        public async Task<TDtoResult> DeleteAsync(TDtoDelete dto)
-            => (TDtoResult)await _mediator.Send(dto);
+        public async Task<TDtoResult> DeleteAsync(TDtoDelete dto, CancellationToken cancellationToken)
+            => (TDtoResult)await _mediator.Send(dto, cancellationToken);
 
         /// <summary>
         /// Sends the update command through the mediator and returns the result DTO.
         /// </summary>
-        public async Task<TDtoResult> UpdateAsync(TDtoUpdate dto)
-            => (TDtoResult)await _mediator.Send(dto);
+        public async Task<TDtoResult> UpdateAsync(TDtoUpdate dto, CancellationToken cancellationToken)
+            => (TDtoResult)await _mediator.Send(dto, cancellationToken);
 
         /// <summary>
         /// Retrieves and maps all entities from the domain to result DTOs.
         /// </summary>
-        public virtual async Task<List<TDtoResult>?> GetAllAsync()
+        public virtual async Task<List<TDtoResult>?> GetAllAsync(CancellationToken cancellationToken)
         {
-            var entities = await _baseDomain.GetAllAsync();
+            var entities = await _baseDomain.GetAllAsync(cancellationToken);
             return _mapper.Map<List<TDtoResult>>(entities);
         }
 
         /// <summary>
         /// Retrieves a single entity by ID and maps it to a result DTO.
         /// </summary>
-        public virtual async Task<TDtoResult?> GetByIdAsync(Guid id)
+        public virtual async Task<TDtoResult?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var entity = await _baseDomain.GetByIdAsync(id);
+            var entity = await _baseDomain.GetByIdAsync(id,cancellationToken);
             return entity != null ? _mapper.Map<TDtoResult>(entity) : default;
         }
 
@@ -89,9 +89,9 @@ namespace RMB.Core.UseCases
         /// <summary>
         /// Retrieves all entities matching a predicate and maps them to result DTOs.
         /// </summary>
-        public virtual async Task<List<TDtoResult>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<List<TDtoResult>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
-            var entities = await _baseDomain.GetAllAsync(predicate);
+            var entities = await _baseDomain.GetAllAsync(predicate, cancellationToken);
             var result = _mapper.Map<List<TDtoResult>>(entities);
             return result;
         }
@@ -99,9 +99,9 @@ namespace RMB.Core.UseCases
         /// <summary>
         /// Retrieves a single entity matching a predicate and maps it to a result DTO.
         /// </summary>
-        public virtual async Task<TDtoResult?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TDtoResult?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
-            var entity = await _baseDomain.GetOneByAsync(predicate);
+            var entity = await _baseDomain.GetOneByAsync(predicate, cancellationToken);
             var result = _mapper.Map<TDtoResult>(entity);
             return result;
         }

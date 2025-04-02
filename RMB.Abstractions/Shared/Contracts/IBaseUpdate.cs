@@ -15,7 +15,8 @@ namespace RMB.Abstractions.Shared.Contracts
         /// Updates an existing entity asynchronously.
         /// </summary>
         /// <param name="entity">The entity to be updated.</param>
+        /// <param name="cancellationToken">Token to cancel the asynchronous operation.</param>
         /// <returns>The updated entity.</returns>
-        Task<TEntity> UpdateAsync(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
     }
 }

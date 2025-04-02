@@ -1,20 +1,20 @@
-﻿
-namespace RMB.Abstractions.UseCases
+﻿namespace RMB.Abstractions.UseCases
 {
     /// <summary>
-    /// Defines the contract for updating entities in the application layer.
-    /// This interface ensures that implementing classes provide an asynchronous method 
-    /// to update an entity using a Data Transfer Object (DTO) and return a result DTO.
+    /// Represents the application layer contract for updating an entity using a Data Transfer Object (DTO).
+    /// Ensures that implementing classes expose an asynchronous method to perform the update operation 
+    /// and return a corresponding result DTO.
     /// </summary>
-    /// <typeparam name="TDto">The DTO type containing the data for updating an entity.</typeparam>
+    /// <typeparam name="TDto">The DTO type containing the data to update the entity.</typeparam>
     /// <typeparam name="TDtoResult">The DTO type representing the result of the update operation.</typeparam>
     public interface IBaseUpdateUseCase<TDto, TDtoResult>
     {
         /// <summary>
-        /// Updates an existing entity asynchronously using a Data Transfer Object (DTO).
+        /// Asynchronously updates an existing entity based on the provided DTO.
         /// </summary>
-        /// <param name="dto">The DTO containing the data for the update operation.</param>
-        /// <returns>A task that resolves to the result DTO representing the updated entity.</returns>
-        Task<TDtoResult> UpdateAsync(TDto dto);
+        /// <param name="dto">The DTO containing the update data.</param>
+        /// <param name="cancellationToken">Token to cancel the update operation if needed.</param>
+        /// <returns>The result DTO representing the updated entity.</returns>
+        Task<TDtoResult> UpdateAsync(TDto dto, CancellationToken cancellationToken);
     }
 }

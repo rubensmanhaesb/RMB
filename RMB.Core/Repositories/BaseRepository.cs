@@ -30,59 +30,59 @@ namespace RMB.Core.Repositories
              => _dbContext = dbContext;
 
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            await _dbContext.AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.AddAsync(entity, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return entity;
         }
 
-        public async Task<TEntity> DeleteAsync(TEntity entity)
+        public async Task<TEntity> DeleteAsync(TEntity entity, CancellationToken cancellationToken)
         {
             _dbContext.Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return entity;
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
         {
             _dbContext.Update(entity);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return entity;
 
         }
 
-        public async Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<List<TEntity>> GetByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
             => await _dbContext.Set<TEntity>()
                 .AsNoTracking()
                 .Where(predicate)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
-        public virtual async Task<TEntity>? GetByIdAsync(Guid id)
+        public virtual async Task<TEntity>? GetByIdAsync(Guid id, CancellationToken cancellationToken)
             => await _dbContext.Set<TEntity>()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+                .FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id, cancellationToken);
 
 
-        public async virtual Task<List<TEntity>> GetAllAsync()
+        public async virtual Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken)
             => await _dbContext.Set<TEntity>()
                 .AsNoTracking()
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
-        public async virtual Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+        public async virtual Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
             => await _dbContext.Set<TEntity>()
                 .AsNoTracking() 
                 .Where(predicate)
-                .ToListAsync();            
+                .ToListAsync(cancellationToken);            
 
 
-        public async virtual Task<TEntity?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate)
+        public async virtual Task<TEntity?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
             =>await _dbContext.Set<TEntity>()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(predicate);
+                .FirstOrDefaultAsync(predicate,cancellationToken);
 
         public void Dispose()
             => _dbContext.Dispose();

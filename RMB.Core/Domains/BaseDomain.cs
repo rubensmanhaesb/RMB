@@ -24,29 +24,29 @@ namespace RMB.Core.Domains
         protected BaseDomain(BaseRepository<TEntity> repository)
             => _baseRepository = repository;
 
-        public async virtual Task<TEntity> AddAsync(TEntity entity)
-            => await _baseRepository.AddAsync(entity);
+        public async virtual Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken)
+            => await _baseRepository.AddAsync(entity, cancellationToken);
 
 
-        public async virtual Task<TEntity> DeleteAsync(TEntity entity)
-            => await _baseRepository.DeleteAsync(entity);
+        public async virtual Task<TEntity> DeleteAsync(TEntity entity, CancellationToken cancellationToken)
+            => await _baseRepository.DeleteAsync(entity, cancellationToken);
 
 
         public void Dispose()
             => _baseRepository.Dispose();
 
 
-        public async virtual Task<List<TEntity>>? GetAllAsync()
-            => await _baseRepository.GetAllAsync();
+        public async virtual Task<List<TEntity>>? GetAllAsync(CancellationToken cancellationToken)
+            => await _baseRepository.GetAllAsync(cancellationToken);
 
-        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
-            => await _baseRepository.GetAllAsync(predicate);
+        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+            => await _baseRepository.GetAllAsync(predicate, cancellationToken);
 
-        public async Task<TEntity>? GetByIdAsync(Guid id)
-            => await _baseRepository.GetByIdAsync(id);
+        public async Task<TEntity>? GetByIdAsync(Guid id, CancellationToken cancellationToken)
+            => await _baseRepository.GetByIdAsync(id,cancellationToken);
 
-        public Task<TEntity?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate)
-            => _baseRepository.GetOneByAsync(predicate);
+        public Task<TEntity?> GetOneByAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+            => _baseRepository.GetOneByAsync(predicate, cancellationToken);
 
         public async Task<PaginatedResult<TProjection>> GetPaginatedAsync<TProjection>(
             Expression<Func<TEntity, bool>>? predicate,
@@ -69,8 +69,8 @@ namespace RMB.Core.Domains
                 select);
         }
 
-        public async virtual Task<TEntity> UpdateAsync(TEntity entity)
-            => await _baseRepository.UpdateAsync(entity);
+        public async virtual Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+            => await _baseRepository.UpdateAsync(entity, cancellationToken);
 
 
     }
