@@ -11,7 +11,7 @@ namespace RMB.Core.Paginations.Extensions
     /// Provides extension methods for IQueryable to support paginated queries,
     /// including filtering, projection, grouping, and ordering.
     /// </summary>
-    public static class QueryableExtensions
+    public static class QueryableExtension
     {
         /// <summary>
         /// Executes a paginated query with optional filtering, projection, ordering, and grouping.
@@ -19,7 +19,7 @@ namespace RMB.Core.Paginations.Extensions
         public static async Task<PaginatedResult<TProjection>> ToPaginatedResultAsync<TEntity, TProjection>(
             this IQueryable<TEntity> source,
             PaginationRequest paginationRequest,
-            PaginatedQueryOptions<TEntity, TProjection> options,
+            PaginatedQueryOptionsService<TEntity, TProjection> options,
             CancellationToken cancellationToken)
             where TEntity : class
         {

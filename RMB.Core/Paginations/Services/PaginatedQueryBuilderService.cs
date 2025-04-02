@@ -9,8 +9,8 @@ namespace RMB.Core.Paginations.Services
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity being queried.</typeparam>
     /// <typeparam name="TProjection">The type of the final projection returned in the result.</typeparam>
-    public class PaginatedQueryBuilder<TEntity, TProjection>
-        : PaginatedQueryOptions<TEntity, TProjection>, // Inherits the option storage
+    public class PaginatedQueryBuilderService<TEntity, TProjection>
+        : PaginatedQueryOptionsService<TEntity, TProjection>, // Inherits the option storage
           IPaginatedQueryBuilder<TEntity, TProjection> // Implements the fluent interface
         where TEntity : class
     {
@@ -18,7 +18,7 @@ namespace RMB.Core.Paginations.Services
         /// Static factory method to create a new instance of the builder.
         /// </summary>
         public static IPaginatedQueryBuilder<TEntity, TProjection> Create()
-            => new PaginatedQueryBuilder<TEntity, TProjection>();
+            => new PaginatedQueryBuilderService<TEntity, TProjection>();
 
         /// <summary>
         /// Sets the filtering expression for the query.

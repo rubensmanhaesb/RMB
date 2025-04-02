@@ -99,8 +99,8 @@ namespace RMB.Core.Repositories
             Expression<Func<IGrouping<object, TEntity>, TProjection>>? selectGroupBy = null,
             Expression<Func<TEntity, TProjection>>? select = null)
         {
-            var options = (PaginatedQueryBuilder<TEntity, TProjection>)
-                PaginatedQueryBuilder<TEntity, TProjection>
+            var options = (PaginatedQueryBuilderService<TEntity, TProjection>)
+                PaginatedQueryBuilderService<TEntity, TProjection>
                     .Create()
                     .WithPredicate(predicate!)
                     .WithInclude(include!)

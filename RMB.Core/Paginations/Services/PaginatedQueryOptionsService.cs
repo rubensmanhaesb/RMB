@@ -9,7 +9,7 @@ namespace RMB.Core.Paginations.Services
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity being queried.</typeparam>
     /// <typeparam name="TProjection">The type of the final projected result.</typeparam>
-    public class PaginatedQueryOptions<TEntity, TProjection>
+    public class PaginatedQueryOptionsService<TEntity, TProjection>
     {
         /// <summary>
         /// Filter condition to be applied to the query.

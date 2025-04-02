@@ -3,7 +3,7 @@
     /// <summary>
     /// Utility class responsible for generating unique Correlation IDs.
     /// </summary>
-    public static class CorrelationIdGenerator
+    public static class CorrelationIdGeneratorHelper
     {
         /// <summary>
         /// Generates a new unique Correlation ID in a shortened format (without hyphens).

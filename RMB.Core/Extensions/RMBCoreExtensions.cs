@@ -27,7 +27,7 @@ namespace RMB.Core.Extensions
             #region Logging
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             services.AddHttpContextAccessor();
-            services.AddSingleton<ICorrelationIdProvider, CorrelationIdProvider>();
+            services.AddSingleton<ICorrelationIdProvider, CorrelationIdProviderService>();
             services.Configure<LoggingSettings>(configuration.GetSection("Logging"));
 
             #endregion Logging
