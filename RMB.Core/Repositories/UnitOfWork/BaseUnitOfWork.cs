@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using RMB.Abstractions.Repositories;
 
-namespace RMB.Core.UnitOfWork
+namespace RMB.Core.Repositories.UnitOfWork
 {
     /// <summary>
     /// Base implementation of the Unit of Work pattern, managing database transactions and ensuring atomic operations.

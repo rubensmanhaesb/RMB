@@ -1,7 +1,9 @@
-﻿using RMB.Abstractions.Domains;
+﻿using FluentValidation;
+using RMB.Abstractions.Domains;
 using RMB.Abstractions.Entities;
-using RMB.Abstractions.Shared.Contracts.Requests;
-using RMB.Abstractions.Shared.Contracts.Responses;
+using RMB.Abstractions.Shared.Contracts.Paginations.Requests;
+using RMB.Abstractions.Shared.Contracts.Paginations.Responses;
+using RMB.Core.Paginations.Validations;
 using RMB.Core.Repositories;
 using System.Linq.Expressions;
 
@@ -58,7 +60,10 @@ namespace RMB.Core.Domains
             Expression<Func<IGrouping<object, TEntity>, TProjection>>? selectGroupBy = null,
             Expression<Func<TEntity, TProjection>>? select = null)
         {
-            return await _baseRepository.GetPaginatedAsync(
+            
+            await (new PaginationRequestValidation()).ValidateAndThrowAsync(paginationRequest,  cancellationToken);
+
+            var result = await _baseRepository.GetPaginatedAsync(
                 predicate,
                 paginationRequest,
                 cancellationToken,
@@ -67,6 +72,10 @@ namespace RMB.Core.Domains
                 groupBy,
                 selectGroupBy,
                 select);
+
+            await (new PaginationResultValidation<TProjection>()).ValidateAndThrowAsync(result, cancellationToken);
+
+            return result;
         }
 
         public async virtual Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)

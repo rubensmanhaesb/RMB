@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using RMB.Abstractions.Shared.Contracts.Requests;
-using RMB.Abstractions.Shared.Contracts.Responses;
-using RMB.Core.Repositories;
+using RMB.Abstractions.Shared.Contracts.Paginations.Requests;
+using RMB.Abstractions.Shared.Contracts.Paginations.Responses;
+using RMB.Core.Paginations.Services;
 using System.Linq.Expressions;
 
-namespace RMB.Core.Extensions
+namespace RMB.Core.Paginations.Extensions
 {
     /// <summary>
     /// Provides extension methods for IQueryable to support paginated queries,

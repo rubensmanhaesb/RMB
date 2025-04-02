@@ -1,4 +1,4 @@
-﻿namespace RMB.Abstractions.Shared.Contracts.Responses
+﻿namespace RMB.Abstractions.Shared.Contracts.Paginations.Responses
 {
     public class PaginatedResult<T>
     {

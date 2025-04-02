@@ -1,4 +1,4 @@
-﻿namespace RMB.Abstractions.Shared.Contracts.Requests
+﻿namespace RMB.Abstractions.Shared.Contracts.Paginations.Requests
 {
     public class PaginationRequest
     {

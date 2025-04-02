@@ -1,4 +1,4 @@
-﻿using RMB.Abstractions.Shared.Contracts.Requests;
+﻿using RMB.Abstractions.Shared.Contracts.Paginations.Requests;
 using System.Linq.Expressions;
 
 namespace RMB.Abstractions.Application

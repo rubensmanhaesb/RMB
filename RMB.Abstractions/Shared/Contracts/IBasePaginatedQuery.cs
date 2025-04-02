@@ -1,5 +1,5 @@
-﻿using RMB.Abstractions.Shared.Contracts.Requests;
-using RMB.Abstractions.Shared.Contracts.Responses;
+﻿using RMB.Abstractions.Shared.Contracts.Paginations.Requests;
+using RMB.Abstractions.Shared.Contracts.Paginations.Responses;
 using System.Linq.Expressions;
 
 

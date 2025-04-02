@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace RMB.Core.Repositories
+namespace RMB.Core.Paginations.Services
 {
     /// <summary>
     /// Encapsulates all optional configuration options for building a paginated query.

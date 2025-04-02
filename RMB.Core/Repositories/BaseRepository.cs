@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RMB.Abstractions.Entities;
 using RMB.Abstractions.Repositories;
-using RMB.Abstractions.Repositories.Paginations;
-using RMB.Abstractions.Shared.Contracts.Requests;
-using RMB.Abstractions.Shared.Contracts.Responses;
-using RMB.Core.Extensions;
+using RMB.Abstractions.Shared.Contracts.Paginations;
+using RMB.Abstractions.Shared.Contracts.Paginations.Requests;
+using RMB.Abstractions.Shared.Contracts.Paginations.Responses;
+using RMB.Core.Paginations.Extensions;
+using RMB.Core.Paginations.Services;
 using System.Linq.Expressions;
 
 namespace RMB.Core.Repositories

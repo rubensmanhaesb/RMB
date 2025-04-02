@@ -4,9 +4,9 @@ using RMB.Abstractions.UseCases;
 using RMB.Core.Domains;
 using RMB.Abstractions.Entities;
 using RMB.Abstractions.Application;
-using RMB.Abstractions.Shared.Contracts.Responses;
 using System.Linq.Expressions;
-using RMB.Abstractions.Shared.Contracts.Requests;
+using RMB.Abstractions.Shared.Contracts.Paginations.Requests;
+using RMB.Abstractions.Shared.Contracts.Paginations.Responses;
 
 namespace RMB.Core.UseCases
 {

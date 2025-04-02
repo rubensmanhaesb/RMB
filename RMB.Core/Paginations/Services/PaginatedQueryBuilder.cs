@@ -1,7 +1,7 @@
 ﻿using RMB.Abstractions.Shared.Contracts;
 using System.Linq.Expressions;
 
-namespace RMB.Core.Repositories
+namespace RMB.Core.Paginations.Services
 {
     /// <summary>
     /// A fluent builder that configures options for executing paginated queries.
