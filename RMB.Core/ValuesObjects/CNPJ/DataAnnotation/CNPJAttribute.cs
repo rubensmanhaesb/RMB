@@ -1,7 +1,7 @@
-﻿using RMB.Core.Validation.Helpers;
+﻿using RMB.Core.ValuesObjects.CNPJ.Helpers;
 using System.ComponentModel.DataAnnotations;
 
-namespace RMB.Core.Validation.DataAnnotation
+namespace RMB.Core.ValuesObjects.CNPJ.DataAnnotation
 {
     /// <summary>
     /// Custom Data Annotation for CNPJ validation.

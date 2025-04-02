@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
 
-namespace RMB.Core.Validation.Helpers
+namespace RMB.Core.ValuesObjects.CNPJ.Helpers
 {
     public static class CNPJValidation
     {
