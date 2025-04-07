@@ -5,6 +5,8 @@ using RMB.Abstractions.UseCases.Logs;
 using RMB.Core.Logs.Mediator.Behavior;
 using RMB.Core.Logs.Services;
 using RMB.Core.Logs.Settings;
+using RMB.Core.ValuesObjects.Logradouro;
+using RMB.Core.ValuesObjects.Logradouro.Validations;
 
 namespace RMB.Core.Extensions
 {
@@ -31,6 +33,9 @@ namespace RMB.Core.Extensions
             services.Configure<LoggingSettings>(configuration.GetSection("Logging"));
 
             #endregion Logging
+            services.AddHttpClient<IViaCepService, ViaCepService>();
+            services.AddScoped<EnderecoValidation>();
+
 
             return services;
         }

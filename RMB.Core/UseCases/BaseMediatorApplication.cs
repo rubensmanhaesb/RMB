@@ -66,7 +66,8 @@ namespace RMB.Core.UseCases
         public virtual async Task<List<TDtoResult>?> GetAllAsync(CancellationToken cancellationToken)
         {
             var entities = await _baseDomain.GetAllAsync(cancellationToken);
-            return _mapper.Map<List<TDtoResult>>(entities);
+            var result =  _mapper.Map<List<TDtoResult>>(entities);
+            return result;
         }
 
         /// <summary>

@@ -1,12 +1,20 @@
 ﻿using System.Text.RegularExpressions;
 
-
 namespace RMB.Core.ValuesObjects.CNPJ.Helpers
 {
+    /// <summary>
+    /// Provides validation logic for Brazilian CNPJ numbers.
+    /// </summary>
     public static class CNPJValidation
     {
+        /// <summary>
+        /// Validates whether a given CNPJ string is structurally valid.
+        /// </summary>
+        /// <param name="cnpj">The CNPJ to validate.</param>
+        /// <returns>True if the CNPJ is valid; otherwise, false.</returns>
         public static bool Validation(string? cnpj)
         {
+
             if (string.IsNullOrWhiteSpace(cnpj))
                 return false;
 
@@ -41,6 +49,5 @@ namespace RMB.Core.ValuesObjects.CNPJ.Helpers
 
             return cnpj.EndsWith(digito1.ToString() + digito2.ToString());
         }
-
     }
 }

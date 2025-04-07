@@ -13,9 +13,9 @@ namespace RMB.Core.Repositories.UnitOfWork
         private readonly DbContext _dbContext;
         private  IDbContextTransaction _transaction;
 
-        public BaseUnitOfWork(DbContext context)
+        public BaseUnitOfWork(IDbContextFactory<DbContext> factory)
         {
-            _dbContext = context;
+            _dbContext = factory.CreateDbContext(); 
         }
 
         public async Task BeginTransactionAsync()
