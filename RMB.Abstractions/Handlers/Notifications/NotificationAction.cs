@@ -1,6 +1,4 @@
-﻿
-
-namespace RMB.Abstractions.Notifications
+﻿namespace RMB.Abstractions.Handlers.Notifications
 {
     /// <summary>
     /// Represents the possible actions for notifications related to entity state changes.

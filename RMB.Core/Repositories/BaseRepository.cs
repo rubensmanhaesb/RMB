@@ -75,7 +75,7 @@ namespace RMB.Core.Repositories
         {
             await using var context = await _factory.CreateDbContextAsync(cancellationToken);
             var result= await context.Set<TEntity>()
-               // .AsNoTracking()
+                .AsNoTracking()
                 .FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id, cancellationToken);
             return result;
         }
@@ -84,7 +84,7 @@ namespace RMB.Core.Repositories
         {
             await using var context = await _factory.CreateDbContextAsync(cancellationToken);
             return await context.Set<TEntity>()
-               // .AsNoTracking()
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
         }
 
