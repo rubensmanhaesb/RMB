@@ -9,6 +9,9 @@ using System.Text;
 
 namespace RMB.Infrastructure.Messages.Consumers
 {
+    /// <summary>
+    /// Background service responsible for consuming email confirmation messages from RabbitMQ.
+    /// </summary>
     public class MailMessageConsumer : BackgroundService
     {
         private readonly IConfiguration _configuration;
@@ -28,6 +31,9 @@ namespace RMB.Infrastructure.Messages.Consumers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Initializes RabbitMQ connection and declares the queue on service start.
+        /// </summary>
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
             var factory = new ConnectionFactory
@@ -53,6 +59,9 @@ namespace RMB.Infrastructure.Messages.Consumers
             await base.StartAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Starts consuming messages from the RabbitMQ queue.
+        /// </summary>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (_channel is null)
@@ -69,12 +78,16 @@ namespace RMB.Infrastructure.Messages.Consumers
                 consumer: consumer,
                 cancellationToken: stoppingToken);
 
+            // Keeps the background service running
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(1000, stoppingToken);
             }
         }
 
+        /// <summary>
+        /// Gracefully closes the RabbitMQ channel and connection.
+        /// </summary>
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
             if (_channel is not null)
@@ -90,6 +103,9 @@ namespace RMB.Infrastructure.Messages.Consumers
             await base.StopAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Disposes RabbitMQ resources.
+        /// </summary>
         public override void Dispose()
         {
             _channel?.Dispose();
@@ -97,6 +113,9 @@ namespace RMB.Infrastructure.Messages.Consumers
             base.Dispose();
         }
 
+        /// <summary>
+        /// Custom asynchronous consumer implementation for processing incoming messages.
+        /// </summary>
         private class CustomAsyncConsumer : AsyncDefaultBasicConsumer
         {
             private readonly MailHelper _mailHelper;
@@ -111,6 +130,9 @@ namespace RMB.Infrastructure.Messages.Consumers
                 _logger = logger;
             }
 
+            /// <summary>
+            /// Handles incoming messages from the queue, deserializes the payload and triggers email sending.
+            /// </summary>
             public override async Task HandleBasicDeliverAsync(
                 string consumerTag,
                 ulong deliveryTag,
@@ -128,7 +150,7 @@ namespace RMB.Infrastructure.Messages.Consumers
 
                     if (emailConfirmationMessage != null)
                     {
-                        _mailHelper.SendAsync(emailConfirmationMessage);
+                        await _mailHelper.SendAsync(emailConfirmationMessage);
                     }
 
                     await Channel.BasicAckAsync(
