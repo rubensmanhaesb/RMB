@@ -4,11 +4,16 @@ using Polly.Wrap;
 
 namespace RMB.Core.Messages.Resiliences
 {
+    /// <summary>
+    /// Provides resilience policies using Polly, including retry and circuit breaker mechanisms.
+    /// </summary>
     public static class PollyPolicies
     {
         /// <summary>
-        /// Cria uma política de resiliência com retry e circuit breaker para operações que retornam bool.
+        /// Creates a resilience policy that combines retry and circuit breaker strategies for operations returning a boolean.
         /// </summary>
+        /// <param name="logger">Logger used to output diagnostic information.</param>
+        /// <returns>An asynchronous resilience policy composed of retry and circuit breaker.</returns>
         public static AsyncPolicy<bool> CreateResiliencePolicy(ILogger logger)
         {
             // Trata exceções e resultados inválidos (false)

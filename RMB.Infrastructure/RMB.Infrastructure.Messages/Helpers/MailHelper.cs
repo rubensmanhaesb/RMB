@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RMB.Abstractions.Infrastructure.Messages;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RMB.Infrastructure.Messages.Helpers
 {
