@@ -1,38 +1,43 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RMB.Abstractions.Infrastructure.Messages;
 using RMB.Infrastructure.Messages.Helpers;
-using System.Text;
+using FluentValidation;
 
 namespace RMB.Infrastructure.Messages.Consumers
 {
     /// <summary>
-    /// Background service responsible for consuming email confirmation messages from RabbitMQ.
+    /// Background service that listens to RabbitMQ and processes email confirmation messages.
     /// </summary>
     public class MailMessageConsumer : BackgroundService
     {
         private readonly IConfiguration _configuration;
         private readonly MailHelper _mailHelper;
         private readonly ILogger<MailMessageConsumer> _logger;
+        private readonly IValidator<EmailConfirmationMessage> _validator;
 
         private IConnection? _connection;
         private IChannel? _channel;
 
+        /// <summary>
+        /// Constructor that receives dependencies via DI.
+        /// </summary>
         public MailMessageConsumer(
             IConfiguration configuration,
             MailHelper mailHelper,
+            IValidator<EmailConfirmationMessage> validator,
             ILogger<MailMessageConsumer> logger)
         {
             _configuration = configuration;
             _mailHelper = mailHelper;
+            _validator = validator;
             _logger = logger;
         }
 
         /// <summary>
-        /// Initializes RabbitMQ connection and declares the queue on service start.
+        /// Initializes RabbitMQ connection and declares the queue.
         /// </summary>
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -60,17 +65,17 @@ namespace RMB.Infrastructure.Messages.Consumers
         }
 
         /// <summary>
-        /// Starts consuming messages from the RabbitMQ queue.
+        /// Starts the background process that continuously listens and processes messages from RabbitMQ.
         /// </summary>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (_channel is null)
             {
-                _logger.LogError("Channel is not initialized");
+                _logger.LogError("Canal não inicializado.");
                 return;
             }
 
-            var consumer = new CustomAsyncConsumer(_channel, _mailHelper, _logger);
+            var consumer = new CustomAsyncConsumer(_channel, _mailHelper, _validator, _logger);
 
             await _channel.BasicConsumeAsync(
                 queue: _configuration["RabbitMQSettings:Queue"],
@@ -78,7 +83,6 @@ namespace RMB.Infrastructure.Messages.Consumers
                 consumer: consumer,
                 cancellationToken: stoppingToken);
 
-            // Keeps the background service running
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(1000, stoppingToken);
@@ -86,7 +90,7 @@ namespace RMB.Infrastructure.Messages.Consumers
         }
 
         /// <summary>
-        /// Gracefully closes the RabbitMQ channel and connection.
+        /// Gracefully stops the service and closes RabbitMQ resources.
         /// </summary>
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
@@ -104,7 +108,7 @@ namespace RMB.Infrastructure.Messages.Consumers
         }
 
         /// <summary>
-        /// Disposes RabbitMQ resources.
+        /// Disposes the RabbitMQ connection and channel.
         /// </summary>
         public override void Dispose()
         {
@@ -113,62 +117,5 @@ namespace RMB.Infrastructure.Messages.Consumers
             base.Dispose();
         }
 
-        /// <summary>
-        /// Custom asynchronous consumer implementation for processing incoming messages.
-        /// </summary>
-        private class CustomAsyncConsumer : AsyncDefaultBasicConsumer
-        {
-            private readonly MailHelper _mailHelper;
-            private readonly ILogger<MailMessageConsumer> _logger;
-
-            public CustomAsyncConsumer(
-                IChannel channel,
-                MailHelper mailHelper,
-                ILogger<MailMessageConsumer> logger) : base(channel)
-            {
-                _mailHelper = mailHelper;
-                _logger = logger;
-            }
-
-            /// <summary>
-            /// Handles incoming messages from the queue, deserializes the payload and triggers email sending.
-            /// </summary>
-            public override async Task HandleBasicDeliverAsync(
-                string consumerTag,
-                ulong deliveryTag,
-                bool redelivered,
-                string exchange,
-                string routingKey,
-                IReadOnlyBasicProperties properties,
-                ReadOnlyMemory<byte> body,
-                CancellationToken cancellationToken = default)
-            {
-                try
-                {
-                    var message = Encoding.UTF8.GetString(body.Span);
-                    var emailConfirmationMessage = JsonConvert.DeserializeObject<EmailConfirmationMessage>(message);
-
-                    if (emailConfirmationMessage != null)
-                    {
-                        await _mailHelper.SendAsync(emailConfirmationMessage);
-                    }
-
-                    await Channel.BasicAckAsync(
-                        deliveryTag: deliveryTag,
-                        multiple: false,
-                        cancellationToken: cancellationToken);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error processing message");
-
-                    await Channel.BasicNackAsync(
-                        deliveryTag: deliveryTag,
-                        multiple: false,
-                        requeue: false,
-                        cancellationToken: cancellationToken);
-                }
-            }
-        }
     }
 }

@@ -4,7 +4,7 @@ using System.Net;
 using System.Text.Json;
 
 
-namespace RMB.Core.Middleware
+namespace RMB.Core.Middlewares
 {
     public class ValidationExceptionMiddleware
     {
