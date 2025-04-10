@@ -5,8 +5,8 @@ using RMB.Core.Messages.Pipelines;
 using RMB.Core.Messages.Validations;
 using RMB.Infrastructure.Messages.Consumers;
 using RMB.Infrastructure.Messages.Helpers;
-using RMB.Infrastructure.Messages.Middlewares.Validations;
 using RMB.Infrastructure.Messages.Producer;
+using RMB.Infrastructure.Messages.Validations;
 
 
 namespace RMB.Infrastructure.Messages.Extensions

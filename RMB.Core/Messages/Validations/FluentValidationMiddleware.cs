@@ -40,7 +40,7 @@ namespace RMB.Core.Messages.Validations
             var result = await _validator.ValidateAsync(message, cancellationToken);
             if (!result.IsValid)
             {
-                _logger.LogWarning("Message failed validation: {errors}", string.Join(", ", result.Errors.Select(e => e.ErrorMessage)));
+                _logger.LogWarning("Erro na validação da mensagem: {errors}", string.Join(", ", result.Errors.Select(e => e.ErrorMessage)));
                 return false;
             }
 

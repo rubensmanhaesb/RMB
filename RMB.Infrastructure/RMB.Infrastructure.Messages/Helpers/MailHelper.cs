@@ -57,17 +57,17 @@ namespace RMB.Infrastructure.Messages.Helpers
         {
             return @$"
                 <div>
-                    <p>Hello,</p>
-                    <p>You have signed up for the <strong>JiuJitsu App</strong> and we need to confirm your email address.</p>
-                    <p>Please click the link below to confirm your registration:</p>
+                    <p>Olá,</p>
+                    <p>Você se cadastrou no <strong>JiuJitsu App</strong> e precisamos confirmar o seu endereço de e-mail.</p>
+                    <p>Por favor, clique no link abaixo para confirmar seu cadastro:</p>
                     <p>
                         <a href=""{emailConfirmationMessage.ConfirmationLink}"" target=""_blank"">
-                            Confirm my email
+                            Confirmar meu e-mail
                         </a>
                     </p>
-                    <p>If you did not perform this registration, please ignore this email.</p>
+                    <p>Se você não realizou este cadastro, por favor ignore este e-mail.</p>
                     <br/>
-                    <p>JiuJitsu App Team</p>
+                    <p>Equipe JiuJitsu App</p>
                 </div>
             ";
         }

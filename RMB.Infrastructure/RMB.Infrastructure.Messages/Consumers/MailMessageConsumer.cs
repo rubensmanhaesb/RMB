@@ -53,13 +53,8 @@ namespace RMB.Infrastructure.Messages.Consumers
             _connection = await factory.CreateConnectionAsync(cancellationToken);
             _channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
-            await _channel.QueueDeclareAsync(
-                queue: _configuration["RabbitMQSettings:Queue"],
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null,
-                cancellationToken: cancellationToken);
+            var initializer = new QueueInitializer(_channel);
+            await initializer.EnsureQueueWithDeadLetterAsync(_configuration["RabbitMQSettings:Queue"], cancellationToken);
 
             await base.StartAsync(cancellationToken);
         }
@@ -75,7 +70,7 @@ namespace RMB.Infrastructure.Messages.Consumers
                 return;
             }
 
-            var consumer = new CustomAsyncConsumer(_channel, _mailHelper, _validator, _logger);
+            var consumer = new EmailConfirmationConsumer(_channel, _mailHelper, _validator, _logger);
 
             await _channel.BasicConsumeAsync(
                 queue: _configuration["RabbitMQSettings:Queue"],

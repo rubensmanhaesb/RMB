@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RMB.Abstractions.Infrastructure.Messages;
+using RMB.Infrastructure.Messages.Helpers;
+
 using System.Text;
 
 namespace RMB.Infrastructure.Messages.Producer
@@ -34,33 +36,25 @@ namespace RMB.Infrastructure.Messages.Producer
 
         /// <summary>
         /// Publishes an email confirmation message to the configured RabbitMQ queue.
+        /// Ensures the queue and its DLQ/DLX are created before sending.
         /// </summary>
         /// <param name="emailConfirmationMessage">The message to be published.</param>
         public async Task PublishEmailConfirmationAsync(EmailConfirmationMessage emailConfirmationMessage)
         {
-            // Establish a connection and open a channel
             await using var connection = await _connectionFactory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();
 
-            // Declare the queue to ensure it exists
-            await channel.QueueDeclareAsync(
-                queue: _queueName,
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
+            var initializer = new QueueInitializer(channel);
+            await initializer.EnsureQueueWithDeadLetterAsync(_queueName, CancellationToken.None);
 
-            // Serialize the message object to JSON
             var json = JsonConvert.SerializeObject(emailConfirmationMessage);
             var body = Encoding.UTF8.GetBytes(json);
 
-            // Set message properties
             var properties = new BasicProperties
             {
                 Persistent = true // Ensures message will survive broker restarts
             };
 
-            // Publish the message to the queue
             await channel.BasicPublishAsync(
                 exchange: string.Empty,
                 routingKey: _queueName,

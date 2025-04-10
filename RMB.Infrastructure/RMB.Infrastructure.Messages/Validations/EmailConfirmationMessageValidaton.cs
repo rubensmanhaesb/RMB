@@ -2,7 +2,7 @@
 using RMB.Abstractions.Infrastructure.Messages;
 
 
-namespace RMB.Infrastructure.Messages.Middlewares.Validations
+namespace RMB.Infrastructure.Messages.Validations
 {
     public class EmailConfirmationMessageValidator : AbstractValidator<EmailConfirmationMessage>
     {
