@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using RMB.Abstractions.Infrastructure.Messages;
+using RMB.Abstractions.Infrastructure.Messages.Entities;
 using System.Net.Mail;
 
 namespace RMB.Infrastructure.Messages.Helpers

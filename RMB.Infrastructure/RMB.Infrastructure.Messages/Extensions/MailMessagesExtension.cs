@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using RMB.Abstractions.Infrastructure.Messages;
+using RMB.Abstractions.Infrastructure.Messages.Entities;
+using RMB.Abstractions.Infrastructure.Messages.Interfaces;
+using RMB.Core.Messages.FailedMessages.Services;
 using RMB.Core.Messages.Pipelines;
 using RMB.Core.Messages.Validations;
 using RMB.Infrastructure.Messages.Consumers;
@@ -24,12 +26,17 @@ namespace RMB.Infrastructure.Messages.Extensions
             // FluentValidation para o DTO
             services.AddTransient<IValidator<EmailConfirmationMessage>, EmailConfirmationMessageValidator>();
 
-            // Registro do pipeline, se quiser reutilizá-lo externamente
+            // Registro do pipeline,
             services.AddTransient(typeof(FluentValidationMiddleware<>));
             services.AddTransient(typeof(JsonDeserializationMiddleware<>));
 
             // Background consumer
             services.AddHostedService<MailMessageConsumer>();
+            
+            // Message failure service (core)
+            services.AddTransient<IMessageFailureService, MessageFailureService>();
+
+            services.AddTransient<IDeadLetterHandler, DeadLetterHandler>();
 
             return services;
         }

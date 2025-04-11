@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using RMB.Abstractions.Infrastructure.Messages;
+using RMB.Abstractions.Infrastructure.Messages.Entities;
+using RMB.Abstractions.Infrastructure.Messages.Interfaces;
 using RMB.Infrastructure.Messages.Helpers;
 
 using System.Text;

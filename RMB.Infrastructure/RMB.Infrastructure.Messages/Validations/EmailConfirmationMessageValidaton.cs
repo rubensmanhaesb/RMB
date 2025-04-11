@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RMB.Abstractions.Infrastructure.Messages;
+using RMB.Abstractions.Infrastructure.Messages.Entities;
 
 
 namespace RMB.Infrastructure.Messages.Validations

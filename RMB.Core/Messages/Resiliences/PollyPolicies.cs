@@ -10,10 +10,10 @@ namespace RMB.Core.Messages.Resiliences
     public static class PollyPolicies
     {
         /// <summary>
-        /// Creates a resilience policy that combines retry and circuit breaker strategies for operations returning a boolean.
+        /// Creates a resilience policy that combines exponential retry and circuit breaker for boolean-returning operations.
         /// </summary>
-        /// <param name="logger">Logger used to output diagnostic information.</param>
-        /// <returns>An asynchronous resilience policy composed of retry and circuit breaker.</returns>
+        /// <param name="logger">Logger used to register diagnostic information.</param>
+        /// <returns>An asynchronous composite policy to handle failures in a resilient way.</returns>
         public static AsyncPolicy<bool> CreateResiliencePolicy(ILogger logger)
         {
             // Trata exceções e resultados inválidos (false)
@@ -21,12 +21,17 @@ namespace RMB.Core.Messages.Resiliences
                 .Handle<Exception>()
                 .OrResult<bool>(result => !result);
 
+            // Retry com backoff progressivo (2s, 4s, 6s)
             var retryPolicy = policyBuilder
-                .RetryAsync(3, onRetry: (resultado, tentativa, _) =>
-                {
-                    var erro = resultado.Exception?.Message ?? "Operação retornou falso.";
-                    logger.LogWarning("Tentativa {Tentativa} falhou: {Erro}", tentativa, erro);
-                });
+                .WaitAndRetryAsync(
+                    retryCount: 3,
+                    sleepDurationProvider: attempt => TimeSpan.FromSeconds(attempt * 2),
+                    onRetry: (resultado, tempoDeEspera, tentativa, contexto) =>
+                    {
+                        var erro = resultado.Exception?.Message ?? "Operação retornou false.";
+                        logger.LogWarning("Tentativa {Tentativa} falhou: {Erro}. Nova tentativa em {Espera}s.",
+                            tentativa, erro, tempoDeEspera.TotalSeconds);
+                    });
 
             var circuitBreakerPolicy = policyBuilder
                 .CircuitBreakerAsync(

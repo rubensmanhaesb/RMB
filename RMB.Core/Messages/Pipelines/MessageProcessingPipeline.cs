@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
+using RMB.Abstractions.Infrastructure.Messages.Interfaces;
 using RMB.Core.Messages.Validations;
 
 
@@ -22,7 +23,8 @@ namespace RMB.Core.Messages.Pipelines
         public static IMessageMiddleware<T> Build<T>(
             IValidator<T> validator,
             Func<T, CancellationToken, Task> finalHandler,
-            ILogger logger)
+            ILogger logger,
+            IDeadLetterHandler failureHandler)
             where T : class
         {
             // Middleware to validate the deserialized message
@@ -32,9 +34,14 @@ namespace RMB.Core.Messages.Pipelines
                 return true;
             }, logger);
 
-            // Middleware to deserialize the message from JSON before passing to validation
-            return new JsonDeserializationMiddleware<T>(
+            var deserializationMiddleware = new JsonDeserializationMiddleware<T>(
                 validationMiddleware.InvokeAsync,
+                logger
+            );
+
+            return new FallbackToFailureHandlerMiddleware<T>(
+                deserializationMiddleware,
+                failureHandler,
                 logger
             );
         }

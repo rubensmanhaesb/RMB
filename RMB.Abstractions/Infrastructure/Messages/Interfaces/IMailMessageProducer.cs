@@ -1,10 +1,11 @@
-﻿using System;
+﻿using RMB.Abstractions.Infrastructure.Messages.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RMB.Abstractions.Infrastructure.Messages
+namespace RMB.Abstractions.Infrastructure.Messages.Interfaces
 {
     /// <summary>
     /// Defines a contract for publishing email confirmation messages to a message broker.

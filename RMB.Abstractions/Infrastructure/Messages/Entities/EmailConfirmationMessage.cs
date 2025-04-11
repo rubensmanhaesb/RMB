@@ -1,5 +1,4 @@
-﻿
-namespace RMB.Abstractions.Infrastructure.Messages
+﻿namespace RMB.Abstractions.Infrastructure.Messages.Entities
 {
     /// <summary>
     /// Represents the message payload for confirming a user's email address.

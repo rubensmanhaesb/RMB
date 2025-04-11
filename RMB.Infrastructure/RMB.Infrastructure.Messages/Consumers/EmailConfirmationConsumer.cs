@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
-using RMB.Abstractions.Infrastructure.Messages;
+using RMB.Abstractions.Infrastructure.Messages.Entities;
+using RMB.Abstractions.Infrastructure.Messages.Interfaces;
 using RMB.Core.Messages.Consumers;
 using RMB.Core.Messages.Pipelines;
 using RMB.Core.Messages.Resiliences;
@@ -26,13 +27,15 @@ namespace RMB.Infrastructure.Messages.Consumers
             IChannel channel,
             MailHelper mailHelper,
             IValidator<EmailConfirmationMessage> validator,
+            IDeadLetterHandler failureHandler,
             ILogger<MailMessageConsumer> logger)
             : base(
                 channel,
                 pipeline: MessageProcessingPipeline.Build(
                     validator,
                     async (msg, ct) => await mailHelper.SendAsync(msg),
-                    logger).InvokeAsync,
+                    logger,
+                    failureHandler).InvokeAsync,
                 resiliencePolicy: PollyPolicies.CreateResiliencePolicy(logger))
         {
         }

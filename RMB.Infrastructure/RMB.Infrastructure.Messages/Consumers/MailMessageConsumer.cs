@@ -2,9 +2,10 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
-using RMB.Abstractions.Infrastructure.Messages;
 using RMB.Infrastructure.Messages.Helpers;
 using FluentValidation;
+using RMB.Abstractions.Infrastructure.Messages.Entities;
+using RMB.Abstractions.Infrastructure.Messages.Interfaces;
 
 namespace RMB.Infrastructure.Messages.Consumers
 {
@@ -17,6 +18,8 @@ namespace RMB.Infrastructure.Messages.Consumers
         private readonly MailHelper _mailHelper;
         private readonly ILogger<MailMessageConsumer> _logger;
         private readonly IValidator<EmailConfirmationMessage> _validator;
+        private readonly IDeadLetterHandler _deadLetterHandler;
+
 
         private IConnection? _connection;
         private IChannel? _channel;
@@ -28,12 +31,15 @@ namespace RMB.Infrastructure.Messages.Consumers
             IConfiguration configuration,
             MailHelper mailHelper,
             IValidator<EmailConfirmationMessage> validator,
-            ILogger<MailMessageConsumer> logger)
+            ILogger<MailMessageConsumer> logger,
+            IDeadLetterHandler deadLetterHandler
+            )
         {
             _configuration = configuration;
             _mailHelper = mailHelper;
             _validator = validator;
             _logger = logger;
+            _deadLetterHandler = deadLetterHandler;
         }
 
         /// <summary>
@@ -70,7 +76,7 @@ namespace RMB.Infrastructure.Messages.Consumers
                 return;
             }
 
-            var consumer = new EmailConfirmationConsumer(_channel, _mailHelper, _validator, _logger);
+            var consumer = new EmailConfirmationConsumer(_channel, _mailHelper, _validator, _deadLetterHandler, _logger);
 
             await _channel.BasicConsumeAsync(
                 queue: _configuration["RabbitMQSettings:Queue"],
