@@ -3,44 +3,32 @@
 namespace RMB.Abstractions.Infrastructure.Messages.Entities
 {
     /// <summary>
-    /// Represents a failed message that could not be processed successfully.
-    /// This entity is used for logging or reprocessing purposes.
+    /// Represents a message that failed during processing and could not be handled successfully.
+    /// This entity is typically used for logging, monitoring, or reprocessing purposes.
     /// </summary>
     public class MessageFailure
     {
         /// <summary>
-        /// Unique identifier of the failure entry.
+        /// Unique identifier for the failure record.
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
-        /// System or application name that generated the message.
+        /// Name of the source system or application where the message originated.
         /// </summary>
         public string SourceSystem { get; set; }
 
-        /// <summary>
-        /// Type or name of the message that failed.
-        /// </summary>
-        public string MessageType { get; set; }
 
         /// <summary>
-        /// Raw content of the message, usually in JSON format.
-        /// </summary>
-        public string Content { get; set; }
-
-        /// <summary>
-        /// Details about why the message failed (validation errors, exceptions, etc).
-        /// </summary>
-        public string ErrorDetails { get; set; }
-
-        /// <summary>
-        /// Date and time when the message failure was recorded (UTC).
+        /// Timestamp (in UTC) indicating when the failure was recorded.
         /// </summary>
         public DateTime FailureTimestamp { get; set; }
 
         /// <summary>
         /// Optional classification of the failure (e.g., DeserializationError, ValidationError, ProcessingError).
+        /// Helps in categorizing and troubleshooting issues.
         /// </summary>
         public string FailureCategory { get; set; }
+
     }
 }

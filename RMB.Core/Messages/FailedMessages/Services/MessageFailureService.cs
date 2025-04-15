@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using RMB.Abstractions.Infrastructure.Messages.Entities;
 using RMB.Abstractions.Infrastructure.Messages.Interfaces;
+using Serilog;
 
 namespace RMB.Core.Messages.FailedMessages.Services
 {
@@ -11,27 +10,32 @@ namespace RMB.Core.Messages.FailedMessages.Services
     /// </summary>
     public class MessageFailureService : IMessageFailureService
     {
-        private readonly ILogger<MessageFailureService> _logger;
         private readonly string _sourceSystem;
 
-        public MessageFailureService(ILogger<MessageFailureService> logger, IConfiguration configuration)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageFailureService"/> class with configuration settings.
+        /// </summary>
+        /// <param name="configuration">The application configuration containing the source system name.</param>
+        public MessageFailureService(IConfiguration configuration)
         {
-            _logger = logger;
             _sourceSystem = configuration["MensagemFalha:SistemaOrigem"] ?? "UnknownSystem";
         }
 
         /// <summary>
-        /// Registers the failure by persisting or logging it.
+        /// Registers the message failure by logging it. This method can be extended to persist the failure to a database or external system.
         /// </summary>
+        /// <param name="failure">The failure object containing message failure details.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+
         public async Task RegisterFailureAsync(MessageFailure failure, CancellationToken cancellationToken)
         {
             failure.Id = Guid.NewGuid();
             failure.FailureTimestamp = DateTime.UtcNow;
             failure.SourceSystem = _sourceSystem;
 
-            _logger.LogError("[Message Failure] Tipo: {MessageType}, Erro: {Error}, Payload: {Content}", failure.MessageType, failure.ErrorDetails, failure.Content);
+            Log.Error("Erro Inesperado {SourceSystem}, ID {Id}, Descrição - ", failure.SourceSystem, failure.Id );
 
-            await Task.CompletedTask; // Simulate async persistence
+            await Task.CompletedTask; 
         }
     }
 }

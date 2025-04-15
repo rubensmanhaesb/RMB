@@ -8,7 +8,7 @@ namespace RMB.Core.Messages.Consumers
     /// Handles ACK/NACK and delegates message processing through a provided pipeline.
     /// </summary>
     /// <typeparam name="TMessage">The type of message being processed.</typeparam>
-    public abstract class BaseAsyncConsumer<TMessage> : AsyncDefaultBasicConsumer
+    public abstract class MessageBaseAsyncConsumer<TMessage> : AsyncDefaultBasicConsumer
         where TMessage : class
     {
         private readonly Func<ReadOnlyMemory<byte>, CancellationToken, Task<bool>> _pipeline;
@@ -20,7 +20,7 @@ namespace RMB.Core.Messages.Consumers
         /// <param name="channel">RabbitMQ channel to communicate with.</param>
         /// <param name="pipeline">The middleware pipeline to process the raw message.</param>
         /// <param name="resiliencePolicy">The Polly policy to handle retries and circuit breaking.</param>
-        protected BaseAsyncConsumer(
+        protected MessageBaseAsyncConsumer(
             IChannel channel,
             Func<ReadOnlyMemory<byte>, CancellationToken, Task<bool>> pipeline,
             AsyncPolicy<bool> resiliencePolicy)

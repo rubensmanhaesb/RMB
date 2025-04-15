@@ -1,16 +1,12 @@
 ﻿using RMB.Abstractions.Infrastructure.Messages.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace RMB.Abstractions.Infrastructure.Messages.Interfaces
 {
     /// <summary>
     /// Defines a contract for publishing email confirmation messages to a message broker.
     /// </summary>
-    public interface IMailMessageProducer
+    public interface IMessageProducer
     {
         /// <summary>
         /// Publishes an email confirmation message asynchronously to a queue.

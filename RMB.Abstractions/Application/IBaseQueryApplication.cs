@@ -8,7 +8,7 @@ namespace RMB.Abstractions.Application
     /// </summary>
     /// <typeparam name="TRequest">The type used for querying (typically the entity or a query model).</typeparam>
     /// <typeparam name="TResult">The type of the result returned (typically a DTO).</typeparam>
-    public interface IBaseQueryApplication<TRequest, TResult> : IDisposable
+    public interface IBaseQueryApplication<TRequest, TResult>  
     {
         /// <summary>
         /// Asynchronously retrieves all available results.

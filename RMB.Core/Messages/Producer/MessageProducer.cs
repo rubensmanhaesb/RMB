@@ -3,16 +3,15 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RMB.Abstractions.Infrastructure.Messages.Entities;
 using RMB.Abstractions.Infrastructure.Messages.Interfaces;
-using RMB.Infrastructure.Messages.Helpers;
-
+using RMB.Core.Messages.Queues;
 using System.Text;
 
-namespace RMB.Infrastructure.Messages.Producer
+namespace RMB.Core.Messages.Producer
 {
     /// <summary>
     /// Publishes email confirmation messages to a RabbitMQ queue.
     /// </summary>
-    public class MailMessageProducer : IMailMessageProducer
+    public class MessageProducer : IMessageProducer
     {
         private readonly ConnectionFactory _connectionFactory;
         private readonly string _queueName;
@@ -21,7 +20,7 @@ namespace RMB.Infrastructure.Messages.Producer
         /// Initializes the producer with RabbitMQ settings from configuration.
         /// </summary>
         /// <param name="configuration">Application configuration instance.</param>
-        public MailMessageProducer(IConfiguration configuration)
+        public MessageProducer(IConfiguration configuration)
         {
             _connectionFactory = new ConnectionFactory
             {
@@ -37,15 +36,15 @@ namespace RMB.Infrastructure.Messages.Producer
 
         /// <summary>
         /// Publishes an email confirmation message to the configured RabbitMQ queue.
-        /// Ensures the queue and its DLQ/DLX are created before sending.
+        /// Before publishing, it ensures that the queue and its Dead Letter Queue (DLQ) are properly declared.
         /// </summary>
-        /// <param name="emailConfirmationMessage">The message to be published.</param>
+        /// <param name="emailConfirmationMessage">The email confirmation message to publish.</param>
         public async Task PublishEmailConfirmationAsync(EmailConfirmationMessage emailConfirmationMessage)
         {
             await using var connection = await _connectionFactory.CreateConnectionAsync();
             await using var channel = await connection.CreateChannelAsync();
 
-            var initializer = new QueueInitializer(channel);
+            var initializer = new MessageQueueInitializer(channel);
             await initializer.EnsureQueueWithDeadLetterAsync(_queueName, CancellationToken.None);
 
             var json = JsonConvert.SerializeObject(emailConfirmationMessage);

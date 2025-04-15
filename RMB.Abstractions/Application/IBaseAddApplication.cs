@@ -9,7 +9,7 @@ namespace RMB.Abstractions.Application
     /// </summary>
     /// <typeparam name="TRequest">The type of the request model used to create the entity.</typeparam>
     /// <typeparam name="TResult">The type of the result returned after the entity is created.</typeparam>
-    public interface IBaseAddApplication<TRequest, TResult> : IDisposable
+    public interface IBaseAddApplication<TRequest, TResult> 
     {
         /// <summary>
         /// Asynchronously adds a new entity based on the provided request model.

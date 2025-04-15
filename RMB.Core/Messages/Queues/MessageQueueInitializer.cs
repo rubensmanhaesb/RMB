@@ -1,34 +1,30 @@
 ﻿using RabbitMQ.Client;
-using RabbitMQ.Client.Exceptions;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace RMB.Infrastructure.Messages.Helpers
+
+namespace RMB.Core.Messages.Queues
 {
     /// <summary>
     /// Utility class responsible for creating and configuring RabbitMQ queues,
     /// including Dead Letter Exchange (DLX) and Dead Letter Queue (DLQ) support.
     /// </summary>
-    public class QueueInitializer
+    public class MessageQueueInitializer
     {
         private readonly IChannel _channel;
 
         /// <summary>
-        /// Initializes the QueueInitializer with a RabbitMQ channel instance.
+        /// Initializes a new instance of the <see cref="MessageQueueInitializer"/> class using the provided RabbitMQ channel.
         /// </summary>
         /// <param name="channel">The RabbitMQ channel used to declare queues and exchanges.</param>
-        public QueueInitializer(IChannel channel)
+        public MessageQueueInitializer(IChannel channel)
         {
             _channel = channel;
         }
 
         /// <summary>
-        /// Ensures that the specified queue is declared with a DLX and DLQ.
-        /// Creates the DLX exchange, the DLQ, and binds them accordingly.
+        /// Ensures the creation and binding of a main queue along with its Dead Letter Exchange (DLX) and Dead Letter Queue (DLQ).
         /// </summary>
-        /// <param name="queueName">The name of the primary queue.</param>
-        /// <param name="cancellationToken">Token to cancel the async operations if needed.</param>
+        /// <param name="queueName">The name of the main queue to create and configure.</param>
+        /// <param name="cancellationToken">A token used to cancel the asynchronous operations if needed.</param>
         public async Task EnsureQueueWithDeadLetterAsync(string queueName, CancellationToken cancellationToken)
         {
             var dlxExchange = $"{queueName}.dlx";

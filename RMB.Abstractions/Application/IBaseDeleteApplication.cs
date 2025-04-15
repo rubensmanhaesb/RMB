@@ -9,7 +9,7 @@ namespace RMB.Abstractions.Application
     /// </summary>
     /// <typeparam name="TRequest">The type of the request model containing the data required to perform the deletion.</typeparam>
     /// <typeparam name="TResult">The type of the result returned after the entity is deleted.</typeparam>
-    public interface IBaseDeleteApplication<TRequest, TResult> : IDisposable
+    public interface IBaseDeleteApplication<TRequest, TResult> 
     {
         /// <summary>
         /// Asynchronously deletes an entity based on the provided request model.

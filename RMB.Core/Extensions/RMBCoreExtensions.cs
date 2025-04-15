@@ -31,11 +31,10 @@ namespace RMB.Core.Extensions
             services.AddHttpContextAccessor();
             services.AddSingleton<ICorrelationIdProvider, CorrelationIdProviderService>();
             services.Configure<LoggingSettings>(configuration.GetSection("Logging"));
-
             #endregion Logging
+
             services.AddHttpClient<IViaCepService, ViaCepService>();
             services.AddScoped<EnderecoValidation>();
-
 
             return services;
         }
