@@ -6,7 +6,7 @@ namespace RMB.Abstractions.Infrastructure.Messages.Interfaces
     /// Defines a contract for publishing events that occur during background message processing.
     /// Used to notify consumers about unhandled exceptions.
     /// </summary>
-    public interface IMessageBackgroundEventPublisher
+    public interface IMessageErrorEventPublisher
     {
         /// <summary>
         /// Event triggered when an error occurs during background processing.

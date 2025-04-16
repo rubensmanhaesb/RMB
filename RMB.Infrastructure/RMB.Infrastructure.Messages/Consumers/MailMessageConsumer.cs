@@ -11,41 +11,65 @@ using RMB.Core.Messages.Queues;
 namespace RMB.Infrastructure.Messages.Consumers
 {
     /// <summary>
-    /// Background service that listens to RabbitMQ and processes email confirmation messages.
+    /// Background service that consumes email confirmation messages from RabbitMQ and processes them through a pipeline.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This service implements:
+    /// - RabbitMQ connection management
+    /// - Queue initialization with dead-letter configuration
+    /// - Message consumption with manual acknowledgment
+    /// - Graceful shutdown procedures
+    /// </para>
+    /// <para>
+    /// The processing pipeline includes validation, email sending, and error handling with dead-letter routing.
+    /// </para>
+    /// </remarks>
     public class MailMessageConsumer : BackgroundService
     {
         private readonly IConfiguration _configuration;
         private readonly MailService _mailService;
         private readonly IValidator<EmailConfirmationMessage> _validator;
         private readonly IMessageDeadLetterHandler _deadLetterHandler;
-        private readonly IMessageBackgroundEventPublisher _eventPublisher;
+        private readonly IMessageErrorEventPublisher _messageErrorEventPublisher;
+        private readonly IMessageSuccessEventPublisher _messageSuccessEventPublisher;
 
 
         private IConnection? _connection;
         private IChannel? _channel;
 
         /// <summary>
-        /// Initializes the background consumer and injects dependencies such as mail service, validator, and event handlers.
+        /// Initializes a new instance of the email message consumer service.
         /// </summary>
+        /// <param name="configuration">Application configuration containing RabbitMQ settings.</param>
+        /// <param name="mailService">Service responsible for sending email confirmations.</param>
+        /// <param name="validator">Validator for email confirmation messages.</param>
+        /// <param name="deadLetterHandler">Handler for failed messages that go to dead-letter queue.</param>
+        /// <param name="messageErrorEventPublisher">Publisher for error events.</param>
+        /// <param name="messageSuccessEventPublisher">Publisher for success events.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any required dependency is null.</exception>
         public MailMessageConsumer(
             IConfiguration configuration,
             MailService mailService,
             IValidator<EmailConfirmationMessage> validator,
             IMessageDeadLetterHandler deadLetterHandler,
-            IMessageBackgroundEventPublisher eventPublisher
-            )
+            IMessageErrorEventPublisher messageErrorEventPublisher,
+            IMessageSuccessEventPublisher messageSuccessEventPublisher)
         {
             _configuration = configuration;
             _mailService = mailService;
             _validator = validator;
             _deadLetterHandler = deadLetterHandler;
-            _eventPublisher = eventPublisher;
+            _messageErrorEventPublisher = messageErrorEventPublisher;
+            _messageSuccessEventPublisher = messageSuccessEventPublisher;
         }
 
         /// <summary>
-        /// Initializes the RabbitMQ connection and ensures that the queue and DLQ are properly declared.
+        /// Establishes RabbitMQ connection and initializes queues during service startup.
         /// </summary>
+        /// <param name="cancellationToken">Cancellation token for async operations.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when required RabbitMQ configuration is missing.</exception>
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
             var factory = new ConnectionFactory
@@ -67,8 +91,10 @@ namespace RMB.Infrastructure.Messages.Consumers
         }
 
         /// <summary>
-        /// Executes the background task that consumes messages from the queue and triggers the email sending pipeline.
+        /// Main processing loop that consumes messages from the queue.
         /// </summary>
+        /// <param name="stoppingToken">Cancellation token for service shutdown.</param>
+        /// <returns>Task representing the long-running operation.</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (_channel is null)
@@ -77,7 +103,7 @@ namespace RMB.Infrastructure.Messages.Consumers
                 return;
             }
 
-            var consumer = new EmailConfirmationConsumer(_channel, _mailService, _validator, _deadLetterHandler, _eventPublisher);
+            var consumer = new EmailConfirmationConsumer(_channel, _mailService, _validator, _deadLetterHandler, _messageErrorEventPublisher, _messageSuccessEventPublisher);
 
             await _channel.BasicConsumeAsync(
                 queue: _configuration["RabbitMQSettings:Queue"],
@@ -93,8 +119,10 @@ namespace RMB.Infrastructure.Messages.Consumers
 
 
         /// <summary>
-        /// Gracefully shuts down the consumer by closing the RabbitMQ channel and connection.
+        /// Gracefully shuts down the RabbitMQ connection during service stopping.
         /// </summary>
+        /// <param name="cancellationToken">Cancellation token for async operations.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
             if (_channel is not null)
@@ -111,7 +139,7 @@ namespace RMB.Infrastructure.Messages.Consumers
         }
 
         /// <summary>
-        /// Disposes the RabbitMQ connection and channel.
+        /// Releases all managed RabbitMQ resources.
         /// </summary>
         public override void Dispose()
         {

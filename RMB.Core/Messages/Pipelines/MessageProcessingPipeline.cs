@@ -5,24 +5,48 @@ using RMB.Core.Messages.Pipelines.Middlewares;
 namespace RMB.Core.Messages.Pipelines
 {
     /// <summary>
-    /// Provides a reusable message processing pipeline composed of middleware components
-    /// like JSON deserialization and FluentValidation.
+    /// Factory for creating standardized message processing pipelines with middleware components.
     /// </summary>
+    /// <remarks>
+    /// Provides a pre-configured pipeline that handles:
+    /// - Message deserialization
+    /// - Validation
+    /// - Error handling
+    /// - Success/failure event publishing
+    /// - Dead-letter queue routing
+    /// </remarks>
     public static class MessageProcessingPipeline
     {
         /// <summary>
-        /// Builds a message processing pipeline with deserialization, validation, and a final handler.
+        /// Constructs a complete message processing pipeline with error handling and validation.
         /// </summary>
-        /// <typeparam name="T">The type of the message to process.</typeparam>
-        /// <param name="validator">The validator used to validate the deserialized message.</param>
-        /// <param name="finalHandler">The final handler to execute after successful validation.</param>
-        /// <param name="logger">Logger instance for logging errors and info.</param>
-        /// <returns>A composed <see cref="IMessageMiddleware{T}"/> pipeline ready to process messages.</returns>
+        /// <typeparam name="T">The message type to be processed.</typeparam>
+        /// <param name="validator">FluentValidation validator for message validation.</param>
+        /// <param name="finalHandler">Business logic handler for valid messages.</param>
+        /// <param name="failureHandler">Handler for failed message processing.</param>
+        /// <param name="eventPublisher">Publisher for error events.</param>
+        /// <param name="messageSuccessEventPublisher">Publisher for success events (optional).</param>
+        /// <returns>A configured message processing pipeline.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if validator, finalHandler or failureHandler is null.
+        /// </exception>
+        /// <example>
+        /// <code>
+        /// var pipeline = MessageProcessingPipeline.Build(
+        ///     validator: new MyMessageValidator(),
+        ///     finalHandler: ProcessMessageAsync,
+        ///     failureHandler: deadLetterHandler,
+        ///     eventPublisher: errorPublisher,
+        ///     messageSuccessEventPublisher: successPublisher
+        /// );
+        /// </code>
+        /// </example>
         public static IMessageMiddleware<T> Build<T>(
-            IValidator<T> validator,
+        IValidator<T> validator,
             Func<T, CancellationToken, Task> finalHandler,
             IMessageDeadLetterHandler failureHandler,
-            IMessageBackgroundEventPublisher eventPublisher)
+            IMessageErrorEventPublisher eventPublisher,
+            IMessageSuccessEventPublisher messageSuccessEventPublisher)
             where T : class
         {
 
@@ -32,7 +56,8 @@ namespace RMB.Core.Messages.Pipelines
                      await finalHandler(msg, ct);
                      return true;
                  },
-                validator
+                validator,
+                messageSuccessEventPublisher
             );
 
             return new MessageFallbackToFailureHandlerMiddleware<T>(

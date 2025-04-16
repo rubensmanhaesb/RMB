@@ -10,10 +10,6 @@
         /// </summary>
         public string ToEmail { get; set; }
 
-        /// <summary>
-        /// Gets or sets the confirmation link the user should click to verify their email.
-        /// </summary>
-        public string ConfirmationLink { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the recipient (to personalize the email).
@@ -21,9 +17,9 @@
         public string? ToName { get; set; }
 
         /// <summary>
-        /// Gets or sets the user ID or internal identifier.
+        /// Gets or sets the internal identifier.
         /// </summary>
-        public Guid? UserId { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// Gets or sets the datetime when the confirmation email was requested.
@@ -33,7 +29,6 @@
         /// <summary>
         /// Gets or sets the expiration date/time of the confirmation link.
         /// </summary>
-        /// 
         public DateTime? ExpiresAt { get; set; }
 
         /// <summary>

@@ -12,44 +12,59 @@ using Serilog;
 namespace RMB.Infrastructure.Messages.Consumers
 {
     /// <summary>
-    /// Background service that consumes the Dead Letter Queue (DLQ) and attempts to reprocess failed messages.
+    /// Background service that consumes messages from the Dead Letter Queue (DLQ) and attempts reprocessing.
     /// </summary>
+    /// <remarks>
+    /// This service provides resilient message reprocessing with:
+    /// - Automatic connection recovery
+    /// - Retry policies via Polly
+    /// - Full processing pipeline execution
+    /// - Proper resource cleanup
+    /// </remarks>
     public class DlqMessageConsumer : BackgroundService
     {
         private readonly IConfiguration _configuration;
-        private readonly MailService _mailHelper;
+        private readonly MailService _mailService;
         private readonly IValidator<EmailConfirmationMessage> _validator;
         private readonly IMessageDeadLetterHandler _failureHandler;
-        private readonly IMessageBackgroundEventPublisher _eventPublisher;
+        private readonly IMessageErrorEventPublisher _messageBackgroundEventPublisher;
+        private readonly IMessageSuccessEventPublisher _messageSuccessEventPublisher;
 
         private IConnection? _connection;
         private IChannel? _channel;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DlqMessageConsumer"/> class.
+        /// Initializes a new instance of the DLQ consumer service.
         /// </summary>
-        /// <param name="configuration">Application configuration.</param>
-        /// <param name="mailHelper">Service responsible for sending emails.</param>
-        /// <param name="validator">Validator for email confirmation messages.</param>
-        /// <param name="failureHandler">Handler responsible for managing failed messages.</param>
-        /// <param name="eventPublisher">Service responsible for publishing background errors.</param>
+        /// <param name="configuration">Application configuration for RabbitMQ settings.</param>
+        /// <param name="mailHelper">Email service for processing email confirmation messages.</param>
+        /// <param name="validator">Validator for email confirmation message content.</param>
+        /// <param name="failureHandler">Handler for permanently failed messages.</param>
+        /// <param name="messageBackgroundEventPublisher">Publisher for error events.</param>
+        /// <param name="messageSuccessEventPublisher">Publisher for success events.</param>
         public DlqMessageConsumer(
             IConfiguration configuration,
             MailService mailHelper,
             IValidator<EmailConfirmationMessage> validator,
             IMessageDeadLetterHandler failureHandler,
-            IMessageBackgroundEventPublisher eventPublisher)
+            IMessageErrorEventPublisher messageBackgroundEventPublisher,
+            IMessageSuccessEventPublisher messageSuccessEventPublisher
+            )
         {
             _configuration = configuration;
-            _mailHelper = mailHelper;
+            _mailService = mailHelper;
             _validator = validator;
             _failureHandler = failureHandler;
-            _eventPublisher = eventPublisher;
+            _messageBackgroundEventPublisher = messageBackgroundEventPublisher;
+            _messageSuccessEventPublisher = messageSuccessEventPublisher;
         }
 
         /// <summary>
-        /// Establishes the RabbitMQ connection and initializes the channel.
+        /// Establishes RabbitMQ connection and channel during service startup.
         /// </summary>
+        /// <param name="cancellationToken">Cancellation token for async operations.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        /// <exception cref="InvalidOperationException">Thrown if RabbitMQ configuration is missing.</exception>
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
             var factory = new ConnectionFactory
@@ -68,8 +83,22 @@ namespace RMB.Infrastructure.Messages.Consumers
         }
 
         /// <summary>
-        /// Starts the DLQ consumer and continuously listens for failed messages to retry processing.
+        /// Main processing loop that consumes messages from DLQ.
         /// </summary>
+        /// <param name="stoppingToken">Cancellation token for service shutdown.</param>
+        /// <returns>Task representing the long-running operation.</returns>
+        /// <remarks>
+        /// <para>
+        /// The processing flow:
+        /// 1. Creates complete processing pipeline
+        /// 2. Configures resilient consumer with Polly policies
+        /// 3. Starts consuming from DLQ
+        /// 4. Runs until service shutdown
+        /// </para>
+        /// <para>
+        /// Messages are manually acknowledged only after successful processing.
+        /// </para>
+        /// </remarks>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (_channel is null)
@@ -82,9 +111,10 @@ namespace RMB.Infrastructure.Messages.Consumers
 
             var pipeline = MessageProcessingPipeline.Build(
                 _validator,
-                async (msg, ct) => await _mailHelper.SendAsync(msg),
+                async (msg, ct) => await _mailService.SendAsync(msg),
                 _failureHandler,
-                _eventPublisher 
+                _messageBackgroundEventPublisher,
+                _messageSuccessEventPublisher
             );
 
 
@@ -103,8 +133,10 @@ namespace RMB.Infrastructure.Messages.Consumers
         }
 
         /// <summary>
-        /// Closes RabbitMQ channel and connection gracefully when the service is stopping.
+        /// Gracefully shuts down RabbitMQ connections.
         /// </summary>
+        /// <param name="cancellationToken">Cancellation token for async operations.</param>
+        /// <returns>Task representing the asynchronous operation.</returns>
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
             if (_channel is not null)
@@ -117,7 +149,7 @@ namespace RMB.Infrastructure.Messages.Consumers
         }
 
         /// <summary>
-        /// Releases RabbitMQ resources.
+        /// Releases all managed RabbitMQ resources.
         /// </summary>
         public override void Dispose()
         {

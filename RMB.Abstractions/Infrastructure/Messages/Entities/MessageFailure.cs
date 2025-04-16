@@ -30,5 +30,11 @@ namespace RMB.Abstractions.Infrastructure.Messages.Entities
         /// </summary>
         public string FailureCategory { get; set; }
 
+        /// <summary>
+        /// Raw string or serialized representation of the original failed message.
+        /// Useful for diagnostics or reprocessing.
+        /// </summary>
+        public string OriginalFailureMessage { get; set; }
+
     }
 }

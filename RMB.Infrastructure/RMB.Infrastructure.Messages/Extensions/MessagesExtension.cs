@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RMB.Abstractions.Infrastructure.Messages.Entities;
 using RMB.Abstractions.Infrastructure.Messages.Interfaces;
+using RMB.Core.Messages.Events;
 using RMB.Core.Messages.Events.BackgroundEventPublisher;
 using RMB.Core.Messages.FailedMessages.Services;
 using RMB.Core.Messages.Pipelines.Middlewares;
@@ -13,38 +14,45 @@ using RMB.Infrastructure.Messages.Validations;
 
 namespace RMB.Infrastructure.Messages.Extensions
 {
+
     /// <summary>
-    /// Extension class for configuring all services related to email message handling and background processing.
+    /// Provides extension methods for configuring message processing services.
     /// </summary>
+    /// <remarks>
+    /// This extension configures the complete email messaging pipeline including:
+    /// - Message producers and consumers
+    /// - Validation infrastructure
+    /// - Processing middleware
+    /// - Background services
+    /// - Error handling and dead-letter queue processing
+    /// - Success/failure event publishing
+    /// </remarks>
     public static class MessagesExtension
     {
         /// <summary>
-        /// Registers all required components for sending and processing email confirmation messages via RabbitMQ.
-        /// This includes producers, consumers, validation, middleware, and background services.
+        /// Registers all services required for email message processing with RabbitMQ.
         /// </summary>
-        /// <param name="services">The service collection to register components into.</param>
-        /// <returns>The updated service collection.</returns>
+        /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
+        /// <returns>The same service collection so that multiple calls can be chained.</returns>
+        /// <example>
+        /// <code>
+        /// services.AddMailMessages()
+        ///         .AddRabbitMQConnection();
+        /// </code>
+        /// </example>
         public static IServiceCollection AddMailMessages(this IServiceCollection services)
         {
-            // Producer
-            //producer
+
             services.AddTransient<IMessageProducer, MessageProducer>();
-            //service
             services.AddTransient<MailService>();
-            //validation
             services.AddTransient<IValidator<EmailConfirmationMessage>, EmailConfirmationMessageValidator>();
-            // Registro do pipeline, 
             services.AddTransient(typeof(JsonDeserializationMiddleware<>));
 
             #region Background services
-            // Background consumer
+
             services.AddHostedService<MailMessageConsumer>();
-            // Background consumer for dead letter queue
             services.AddHostedService<DlqMessageConsumer>();
-            // Background consumer for failed messages
-            services.AddSingleton<IMessageBackgroundEventPublisher, MessageBackgroundEventPublisher>();
-            // Background consumer for failed messages
-            //services.AddScoped<IMessageBackgroundExceptionHandler, ApiBackgroundExceptionHandler>();
+            services.AddSingleton<IMessageErrorEventPublisher, MessageErrorEventPublisher>();
             
             #region Falhas no processamentodas mensagens
             // Message failure service (core)
@@ -52,6 +60,8 @@ namespace RMB.Infrastructure.Messages.Extensions
             // Message failure repository (infrastructure)
             services.AddTransient<IMessageDeadLetterHandler, MessageDeadLetterHandler>();
             #endregion Falhas no processamentodas mensagens
+
+            services.AddSingleton<IMessageSuccessEventPublisher, MessageSuccessEventPublisher>();
 
             #endregion Background services
 

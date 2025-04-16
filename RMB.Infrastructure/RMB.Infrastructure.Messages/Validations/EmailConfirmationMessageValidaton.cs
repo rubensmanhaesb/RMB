@@ -4,8 +4,22 @@ using RMB.Abstractions.Infrastructure.Messages.Entities;
 
 namespace RMB.Infrastructure.Messages.Validations
 {
+    /// <summary>
+    /// Validates EmailConfirmationMessage objects using FluentValidation rules.
+    /// </summary>
+    /// <remarks>
+    /// This validator ensures:
+    /// - Required fields are present
+    /// - Email format is valid
+    /// - No potentially dangerous content
+    /// - Field length constraints
+    /// - Business rule compliance
+    /// </remarks>
     public class EmailConfirmationMessageValidator : AbstractValidator<EmailConfirmationMessage>
     {
+        /// <summary>
+        /// Initializes the validation rules for the EmailConfirmationMessage object.
+        /// </summary>
         public EmailConfirmationMessageValidator()
         {
             RuleFor(x => x.ToEmail)
@@ -17,11 +31,9 @@ namespace RMB.Infrastructure.Messages.Validations
                 .Matches(@"^[^<>]*$").WithMessage("O e-mail não pode conter tags HTML.")
                 .Must(email => !email.Contains('<') && !email.Contains('>')).WithMessage("O e-mail não pode conter caracteres HTML como '<' ou '>'.");
 
-
-            RuleFor(x => x.ConfirmationLink)
-                .Must(link => Uri.IsWellFormedUriString(link, UriKind.Absolute))
-                .WithMessage("O link de confirmação precisa ser uma URL válida.")
-                .NotEmpty().WithMessage("O campo 'ConfirmationLink' é obrigatório.");
+            RuleFor(x => x.Id)
+                .NotNull().WithMessage("O campo 'UserId' é obrigatório.")
+                .Must(id => id != Guid.Empty).WithMessage("O campo 'UserId' não pode ser um GUID vazio.");
         }
     }
 }
